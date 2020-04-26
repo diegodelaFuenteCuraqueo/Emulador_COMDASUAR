@@ -24,7 +24,7 @@ window.setInterval(function(){
 		$("#btnPlay").html("Reproducir");
 
 	}
-}, 1);
+}, 10);
 
 function play(){
 
