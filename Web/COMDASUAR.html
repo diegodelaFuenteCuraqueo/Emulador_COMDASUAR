@@ -10,6 +10,8 @@
 	
 	<!-- P5 library -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/addons/p5.sound.min.js"></script>
 
 	<script src="js/text2COMDASUAR.js"></script>
 	<script src="../asuar.js"></script>
@@ -22,12 +24,39 @@
     
   	<div class = "container center">
 
+  		<!-- ENTRADA DE CÓDIGO ASUAR-->
   		<div class="row">
   			<textarea id="textoDeEntrada" class="form-control" name="textoDeEntrada" rows="20" cols="100">j1 c 4d e f g a bw cs bw a g f e f d e f g a 3bw 4a g f e j0 d n a n 5d n </textarea>
 		</div>
 
+		<!-- TABLA PARA VISUALIZAR DATOS DURANTE REPRODUCCIÓN -->
 		<div class="row">
-		<button class="btn-submit" id="btnCompilar" name="btnCompilar" onclick="compilarTexto()">Compilar</button>
+			<table>
+				<thead>
+				    <tr>
+				      <th>Nota</th>
+				      <th>Vel.</th>
+				      <th>Dur.Ms.</th>
+				   </tr>
+				</thead>
+
+				<tr>
+				<td><code id="noteEventNote" name="noteEventNote">0</code></td>
+				<td><code id="noteEventVel" name="noteEventVel">0</code></td>
+				<td><code id="noteEventDur" name="noteEventDur">0</code></td>
+				</tr>
+			</table>
+		</div>
+
+		<!-- ENTRADA DE CÓDIGO ASUAR-->
+		<div class="row">
+			<div class="col">
+			<button class="btn-submit" id="btnCompilar" name="btnCompilar" onclick="compilarTexto()">Compilar</button>
+			</div>
+			
+			<div class="col">
+			<button class="btn-submit" id="btnPlay" name="btnPlay" onclick="play()">Play</button>
+			</div>
 		</div>
 
 	</div>
