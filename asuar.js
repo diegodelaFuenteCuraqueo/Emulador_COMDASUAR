@@ -39,6 +39,7 @@ function cargarPartitura(lst){
 	var cad = lst.toUpperCase();
 	listIn = textoDeEntrada2ListaDeEventos(cad);
 	convertir(listIn);	//probado reconocimiento de j, momentaneamente
+	console.log("partitura Cargada");
 }
 
 function convertir( lista ){ //para probar el reconocimiento de modos J
@@ -75,12 +76,12 @@ function convertir( lista ){ //para probar el reconocimiento de modos J
 						seqsIndex++;
 					}
 				}
-				post ("J4 repitiendo desde "+J4indxDesde+" a "+J4indxHasta);
+				//post ("J4 repitiendo desde "+J4indxDesde+" a "+J4indxHasta);
 				
 			}	
 			
 			if(evento[evento.indexOf('J')+1] == "0"){ //MODO 0 NOMRAL - - - - - - - - - - -
-				post("cambiando a modo J0\n");
+				//post("cambiando a modo J0\n");
 				JMODO_ACTIVO = 0;
 				J2_ACTIVE = false;
 				J1_ACTIVE = false;
@@ -92,7 +93,7 @@ function convertir( lista ){ //para probar el reconocimiento de modos J
 				J1duracionConst = lista[i+1];
 				J2_ACTIVE = false;
 				J1_ACTIVE = true;
-				post("cambiando a modo J1: dur.const.:"+J1duracionConst+"\n");
+				//post("cambiando a modo J1: dur.const.:"+J1duracionConst+"\n");
 				i +=1;
 				continue;
 			
@@ -104,7 +105,7 @@ function convertir( lista ){ //para probar el reconocimiento de modos J
 				
 				J2alturaConst  = lista[i+1];
 				
-				post("cambiando a modo J2: altura constante : "+J2alturaConst+"\n");
+				//post("cambiando a modo J2: altura constante : "+J2alturaConst+"\n");
 				
 				i +=1;
 				continue;	
@@ -125,7 +126,7 @@ function convertir( lista ){ //para probar el reconocimiento de modos J
 				//LES RESTAMOS 1 PA Q QUEDEN EN NUMEROS CARDINALES 1º 2º
 				J5indxDesde = parseInt(lista[i+1],10)-1;
  				J5indxHasta = parseInt(lista[i+2],10)-1;
-				post("cambiando a modo J5, desde "+J5indxDesde+" hasta "+J5indxHasta+"\n");
+				//post("cambiando a modo J5, desde "+J5indxDesde+" hasta "+J5indxHasta+"\n");
 				
 				var J5cantidadDeNotasRepetidas, J5seqNotas, J5seqDurs;
 				//calcula segmentos a copiar
@@ -138,7 +139,7 @@ function convertir( lista ){ //para probar el reconocimiento de modos J
 					J5seqNotas = seqNotas.slice(J5indxHasta,J5indxDesde+1).reverse();
 					J5seqDurs = seqDuraciones.slice(J5indxHasta,J5indxDesde+1).reverse();					
 				}
-				post(J5seqNotas+" "+J5seqDurs);
+				//post(J5seqNotas+" "+J5seqDurs);
 				
 				for(var inx = 0; inx < J5seqNotas.length; inx++){ // inserta la lista copiada
 
@@ -181,9 +182,9 @@ function convertir( lista ){ //para probar el reconocimiento de modos J
 		} else if (JMODO_ACTIVO == 0 ){
 			
 			seqNotas[seqsIndex] = evento;
-			seqDuraciones[seqsIndex] = lista[i+1].replace(/\s+/g,' ');
+			seqDuraciones[seqsIndex] = lista[i+1]//;.replace(/\s+/g,' '); //esto tiraba error en web
 			
-			post("j0 "+seqNotas[seqsIndex]+" "+seqDuraciones[seqsIndex] );
+			//post("j0 "+seqNotas[seqsIndex]+" "+seqDuraciones[seqsIndex] );
 			i++;
 			seqMidinotes[seqsIndex] = asuar2MidiNote(seqNotas[seqsIndex]);
 			seqMs[seqsIndex] = asuar2Ritmo(seqDuraciones[seqsIndex]);
@@ -192,7 +193,7 @@ function convertir( lista ){ //para probar el reconocimiento de modos J
 			 
 		} else if (JMODO_ACTIVO == 1 ){ // J1_ACTIVE == true){ //DUR CONST.	- - - - - - - - - - - - - - - - - - - - - - -
 			
-			post("J1. dur  "+J1duracionConst+", evento "+evento);
+			//post("J1. dur  "+J1duracionConst+", evento "+evento);
 			seqNotas[seqsIndex] = evento;
 			if (seqNotas[seqsIndex].length == 0){
 				seqNotas[seqsIndex] = ultimaAlt;}
@@ -303,7 +304,13 @@ function bachPitches(){
 		listaBachAlturas += seqMidinotes[k]+" ";}
 		
 	listaBachAlturas += ")";
-	outlet(2,listaBachAlturas);
+
+	try{	outlet(2,listaBachAlturas);
+	}catch(e){ }
+	try{console.log(listaBachAlturas);
+	}catch(e){ }
+
+	return listaBachAlturas;
 }
 
 function bachDurs(){
@@ -313,7 +320,14 @@ function bachDurs(){
 		listaBachDuraciones += seqMs[k]+" ";}
 		
 	listaBachDuraciones += ")";
-	outlet(3,listaBachDuraciones);
+
+
+	try{	outlet(3,listaBachDuraciones);
+	}catch(e){ }
+	try{	console.log(listaBachDuraciones);
+	}catch(e){ }
+
+	return listaBachDuraciones;
 }
 
 function bachOnsets(){
@@ -323,7 +337,11 @@ function bachOnsets(){
 		listaBachOnsets += seqOnsets[k]+" ";}
 		
 	listaBachOnsets += ")";
-	outlet(1,listaBachOnsets);
+	try{	outlet(1,listaBachOnsets);
+	}catch(e){ }
+	try{	console.log(listaBachOnsets);
+	}catch(e){ }
+	return listaBachOnsets;
 }
 
 // - FUNCIONES DE CONVERSIÓN DE DATOS -

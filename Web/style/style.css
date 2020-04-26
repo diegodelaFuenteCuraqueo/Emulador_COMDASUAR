@@ -1,0 +1,21 @@
+.center_div{
+	background-color:rgba(250,255,255,.8);
+	border-radius: 25px;
+	padding: 40px 20px 40px 20px;
+    margin: 20px auto;
+    width: 60% ;
+    border: 2px solid black;
+}
+
+div{
+	padding: 20px 20px 20px 20px;
+	margin: 10px 10px auto;
+
+
+}
+
+.btn{
+	border: 1px solid black;
+	box-shadow: 1px 2px 2px gray;
+
+}
