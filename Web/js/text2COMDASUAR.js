@@ -8,9 +8,7 @@ function compilarTexto(){
 
 $( document ).ready(function() {
     console.log( "ready!" );
-
 });
-
 
 
 playActivado = false;
@@ -51,7 +49,7 @@ function lineaDeTiempo(MsIn){
 			$("#noteEventNote").text(seqMidinotes[index]);
 			$("#noteEventDur").text(seqMs[index]);
 			$("#noteEventVel").text(64);
-			console.log(NotaVel);
+			//console.log(NotaVel);
 
 	}
 
