@@ -30,10 +30,23 @@ function play(){
 
 	if(!playActivado){		playActivado = true;
 	}else if(playActivado){ playActivado = false }
+
+
+	let nota, vel, onset=0, dur;
+
+	for(let i = 0; i<seqOnsets.length;i++){
+		nota = midiToFreq(seqMidinotes[i]);
+		vel  = .5;
+		onset= (seqOnsets[i]*0.001);
+		dur  = (seqMs[i]*0.001)*.8;
+
+		console.log(nota+" "+vel+" "+onset+" "+dur);
+		playNote(nota,vel,onset,dur);
+	}
+
 }
 
 function lineaDeTiempo(MsIn){
-
 	//var eventos = 0;
 	var NotaVel = "";
 	var duractionTotal = seqOnsets[seqOnsets.length]+seqMs[seqMs.length];
@@ -43,20 +56,17 @@ function lineaDeTiempo(MsIn){
 
 		index = seqOnsets.indexOf( MsIn);
 
-			NotaVel = seqMidinotes[index]+" "+64+" "+seqMs[index];
-
-			//eventos++;
-			$("#noteEventNote").text(seqMidinotes[index]);
-			$("#noteEventDur").text(seqMs[index]);
-			$("#noteEventVel").text(64);
-			//console.log(NotaVel);
-
+		NotaVel = seqMidinotes[index]+" "+64+" "+seqMs[index];
+		//eventos++;
+		$("#noteEventNote").text(seqMidinotes[index]);
+		$("#noteEventDur").text(seqMs[index]);
+		$("#noteEventVel").text(64);
+		//console.log(NotaVel);
 	}
-
 }
 
 
-
+/*
 window.onload = function () {
 	MIDI.loadPlugin({
 		soundfontUrl: "./soundfont/",
@@ -77,11 +87,12 @@ window.onload = function () {
 };
 
 function playNotita(){
-			var delay = 0; // play one note every quarter second
-			var note = 50; // the MIDI note
-			var velocity = 127; // how hard the note hits
-			// play the note
-			MIDI.setVolume(0, 127);
-			MIDI.noteOn(0, note, velocity, delay);
-			MIDI.noteOff(0, note, delay + 0.75);
-		}
+	var delay = 0; // play one note every quarter second
+	var note = 50; // the MIDI note
+	var velocity = 127; // how hard the note hits
+	// play the note
+	MIDI.setVolume(0, 127);
+	MIDI.noteOn(0, note, velocity, delay);
+	MIDI.noteOff(0, note, delay + 0.75);
+}
+*/

@@ -10,13 +10,13 @@
 	
 	<!-- P5 library -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/addons/p5.dom.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/addons/p5.sound.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.min.js"></script>
     <!-- -->
 
-    <!-- midi.js css -->
+   
 	<link href="/style/MIDIPlayer.css" rel="stylesheet" type="text/css" />
-	<!-- shim -->
+	 
 	<script src="js/inc/shim/Base64.js" type="text/javascript"></script>
 	<script src="js/inc/shim/Base64binary.js" type="text/javascript"></script>
 	<script src="js/inc/shim/WebAudioAPI.js" type="text/javascript"></script>
@@ -41,6 +41,7 @@
 
 
 	<script src="js/text2COMDASUAR.js"></script>
+
 	<script src="../asuar.js"></script>
 
 	<link rel="stylesheet" href="style/style.css">
@@ -159,10 +160,10 @@
   		<div class="row bordeRedondo">
   			<textarea id="textoDeEntrada" class="form-control txtArea" name="textoDeEntrada" rows="20" cols="100">j1 c 4d e f g a bw cs bw a g f e f d e f g a 3bw 4a g f e j0 d n a n 5d n </textarea>
 		</div>
-
+		<br>
 		<!-- TABLA PARA VISUALIZAR DATOS DURANTE REPRODUCCIÓN -->
 			<div class="row">
-				<div class ="col-12">
+				<div class ="col-3 center">
 				<table>
 					<thead>
 					    <tr>
@@ -179,7 +180,14 @@
 					</tr>
 				</table>
 				</div>
+
+
+				<div class="col-9 center" id="sketch-holder" >
+					<script type="text/javascript" src="js/reproductorDeSeq.js"></script>
+				</div>
+
 			</div>
+		<br>
 
 		<!-- ENTRADA DE CÓDIGO ASUAR-->
 		<div class="row">
@@ -197,6 +205,8 @@
 			</div>
 
 		</div>
+
+		
 
 	</div>
 
