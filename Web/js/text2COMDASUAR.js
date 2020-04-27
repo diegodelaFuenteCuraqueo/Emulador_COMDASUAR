@@ -38,7 +38,7 @@ function play(){
 		nota = midiToFreq(seqMidinotes[i]);
 		vel  = .5;
 		onset= (seqOnsets[i]*0.001);
-		dur  = (seqMs[i]*0.001)*.8;
+		dur  = (seqMs[i]-50)*0.001;
 
 		console.log(nota+" "+vel+" "+onset+" "+dur);
 		playNote(nota,vel,onset,dur);

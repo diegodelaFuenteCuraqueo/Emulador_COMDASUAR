@@ -50,20 +50,41 @@
 </head>
   <body>
     
-  	<div class = "container center">
-  		<div class="row bordeRedondo">
-  		<h1>Nomenclatura COMDASUAR</h1>
+  	<div class = "container center bordeRedondo" >
 
-  		<p>
-  			Cada tono se expresa por su altura y duración: La altura se indica con tres datos: <strong>Octava</strong>* (Un número de O a 7), <strong>Grado de la escala</strong> (nombre de la nota) y <strong>Alteración</strong>*.<br>	
-  		</p>
-  		<p>
-  			Las duraciones se indican inmediatamente después de la altura. Es posible aplicar grupos irregulares anteponiendo un número al código rítmico (ej. 3C = corchea de tresillo). <br>Las duraciones pueden sumarse, por ejemplo una negra con punto puede escribirse como "NC" y como "NP"; una blanca con puntillo es "BP", pero también "BN" o incluso "NNN".<br></p>
-  			<p><small>* Si este elemento se repite, no es necesario escribirlo en cada nota.</small>
-  		<br>
+  		<div class="row">
+			<h1>Un sistema para <i>emular</i> un sistema para hacer música por computadora</h1>
+		</div>
+
+		<div class="row">
+
+		  	<div class="col-5">
+	  			<img  src="http://www.arteymedios.org/media/k2/items/cache/27b4275cdf67fac8ef7af010ec180724_M.jpg">
+	  			 <figcaption><small>José Vicente Asuar usando el COMDASUAR. Fotografía del LP<br> Así habló el computador de José Vicente Asuar, Santiago de Chile, 1978.</small></figcaption>
+	  		</div>
+
+		  	<div class="col-6">
+		  		<p>"Este instrumento, llamado Computador Musical Digital Analógico “Asuar o COMDASUAR, está basado en el microprocesador INTEL 8080. Y tiene como principales rasgos musicales, el que puede reproducir cualquier partitura musical en forma automática, sin necesidad de una ejecución humana."(Asuar, 1980).</p>
+			</div>
+
+
+
+  		</div>
+	  	 
+
+  		<div class="row">
+  			<div class="col-12">
+	  		<h1>Nomenclatura COMDASUAR</h1>
+
+	  		<p>Cada tono se expresa por su altura y duración: La altura se indica con tres datos: <strong>Octava</strong>* (Un número de O a 7), <strong>Grado de la escala</strong> (nombre de la nota) y <strong>Alteración</strong>*.<br>
+	  		</p>
+	  		<p>Las duraciones se indican inmediatamente después de la altura. Es posible aplicar grupos irregulares anteponiendo un número al código rítmico (ej. 3C = corchea de tresillo). <br>Las duraciones pueden sumarse, por ejemplo una negra con punto puede escribirse como "NC" y como "NP"; una blanca con puntillo es "BP", pero también "BN" o incluso "NNN".<br></p>
+	  		<p><small>* Si este elemento se repite, no es necesario escribirlo en cada nota.</small>
+	  		<br>
+	  		</div>
   		</div>
 
-  		<div class="row bordeRedondo">
+  		<div class="row ">
 
   		<div class="col-2">
   		<table>
@@ -98,7 +119,7 @@
   		</div>
 
 
-  		<div class="col-3">
+  		<div class="col-2">
 	  		<table>
 	  			<thead>
 	  				<tr>
@@ -151,7 +172,7 @@
   		</table>
   		</div>
   	</div>
-
+</div>
 
   	<div class = "container center bordeRedondo">
 
@@ -191,16 +212,16 @@
 
 		<!-- ENTRADA DE CÓDIGO ASUAR-->
 		<div class="row">
-			<div class="col-4">
+			<div class="col-3">
 			<button class="btn-submit" id="btnCompilar" name="btnCompilar" onclick="compilarTexto()">Compilar</button>
 			</div>
 
-			<div class="col-4">
+			<div class="col-3">
 			<button class="btn-submit" id="btnPlay" name="btnPlay" onclick="play()">Play</button>
 			</div>
 
 			
-			<div class="col-4">
+			<div class="col-3">
 			<button class="btn-submit" id="btnPlayNotita" name="btnPlayNotita" onclick="playNotita()">playNotita()</button>
 			</div>
 
@@ -210,5 +231,11 @@
 
 	</div>
 
+	<footer>
+	<div class="container center">
+		<p>Proyecto desarrollado por <br>Diego de la Fuente Curaqueo 
+			<br> diego.delafuente@ug.uchile.cl</p>
+	</div>
+	</footer>
   </body>
 </html>

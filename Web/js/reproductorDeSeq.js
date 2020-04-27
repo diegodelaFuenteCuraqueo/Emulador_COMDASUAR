@@ -6,8 +6,9 @@ function setup(){
 	frameRate(85);
 	canvas.parent('sketch-holder');
 
-  	polySynth = new p5.PolySynth();
 
+  	polySynth = new p5.PolySynth();
+  	polySynth.setADSR(0.01, 0.01, .6,0.05);
 }
 
 

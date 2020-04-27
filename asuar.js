@@ -1,3 +1,28 @@
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+//																   		//
+// Emulador del COmputador Musical Analógico Digital ASUAR (COMDASUAR)  //
+//																   		//
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+//																   		//
+// Este código compila secuencias melódicas siguiendo la "nomenclatura  //
+// Asuar", tomando como base la sintaxis definida su artículo de 1980   //
+// "Un Sistema Para Hacer Musica con un microcomputador".		   		//
+// Este compilador recibe un archivo de texto (o cadena) y lo 	   		//
+// convierte en listas de alturas, duraciones, entradas. 		  		//
+// También permite realizar algunos de los heurísticos del COMDASUAR 	//
+// original, tales como transponer, retrogradar, invertir, etc.			//
+// Código original diseñado en Ensamblador.								//
+//																   		//
+// *Optimizado para web y MaxMsp con la librería Bach.			   		//
+//																   		//
+// Librería liberada bajo licencia GNU 									//
+// Released under GNU licence.											//
+//																   		//
+// Diego de la Fuente Curaqueo - Santiago, de Chile, 2020 		   		//
+// diego.delafuente@ug.uchile.cl                                   		//
+//																   		//
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -	- - */
+
 autowatch = 1;
 outlets = 4;
 
