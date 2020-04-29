@@ -5,6 +5,6 @@ Dicho artículo es la base para desarrollar el código en JS que permite leer ar
 
 
 Diego de la Fuente Curaqueo 
-diego.delafuente@ug.uchile.cl
+diego.delafuente [at] ug.uchile.cl
 
 2019
