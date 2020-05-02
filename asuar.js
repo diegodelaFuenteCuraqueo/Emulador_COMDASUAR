@@ -101,6 +101,7 @@ function convertir( lista ){ //para probar el reconocimiento de modos J
 						seqsIndex++;
 					}
 				}
+				J4_ACTIVE = false;
 				//post ("J4 repitiendo desde "+J4indxDesde+" a "+J4indxHasta);
 				
 			}	

@@ -24,7 +24,7 @@ window.setInterval(function(){
 		cursorDeTiempo = 0;
 		clearInterval() ;
 		$("#btnPlay").html("Reproducir");
-		stopPlayer();
+		//stopPlayer();
 	}
 }, 10);
 
@@ -72,6 +72,30 @@ function lineaDeTiempo(MsIn){
 	}
 }
 
+function readTextFile(file, callback, encoding) {
+    var reader = new FileReader();
+    reader.addEventListener('load', function (e) {
+        callback(this.result);
+    });
+    if (encoding) reader.readAsText(file, encoding);
+    else reader.readAsText(file);
+}
+
+function fileChosen(input, output) {
+    if (input.files && input.files[0]) {
+        readTextFile(
+            input.files[0],
+            function (str) {
+                output.value = str;
+            }
+        );
+    }
+}
+
+$('#files').on('change', function () {
+    fileChosen(this, document.getElementById('textoDeEntrada'));
+    $("#textoDeEntrada").text("s");
+});
 
 /*
 window.onload = function () {
