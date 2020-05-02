@@ -19,7 +19,7 @@
 // Released under GNU licence.											//
 //																   		//
 // Diego de la Fuente Curaqueo - Santiago, de Chile, 2020 		   		//
-// diego.delafuente@ug.uchile.cl                                   		//
+// diego.delafuente [at] ug.uchile.cl                              		//
 //																   		//
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -	- - */
 

@@ -2,6 +2,8 @@ function compilarTexto(){
 	let textoIn = $("#textoDeEntrada").val();
 	console.log(textoIn);
 	cargarPartitura(textoIn);
+
+	play();
 }
 
 
@@ -22,14 +24,19 @@ window.setInterval(function(){
 		cursorDeTiempo = 0;
 		clearInterval() ;
 		$("#btnPlay").html("Reproducir");
-
+		stopPlayer();
 	}
 }, 10);
 
 function play(){
 
-	if(!playActivado){		playActivado = true;
-	}else if(playActivado){ playActivado = false }
+	if(!playActivado){		
+		playActivado = true;
+	}else if(playActivado){ 
+		playActivado = false;
+		stopPlayer();
+
+	}
 
 
 	let nota, vel, onset=0, dur;

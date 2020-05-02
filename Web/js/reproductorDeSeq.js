@@ -2,7 +2,7 @@ let polySynth;
 
 function setup(){
 
-	var canvas = createCanvas(400, 50,P2D);
+	var canvas = createCanvas(400, 40,P2D);
 	frameRate(85);
 	canvas.parent('sketch-holder');
 
@@ -14,7 +14,7 @@ function setup(){
 
 function draw(){
 
-	background(127);
+	background(220,220,220);
 	//userStartAudio();
 	var fr = "FR. "+int(getFrameRate());
 	text(fr,width/2,height/2);
@@ -22,4 +22,12 @@ function draw(){
 
 function playNote(nota, vel = .5, timeFromNow, dur){
 	polySynth.play(nota, vel, timeFromNow, dur);
+}
+
+function playNotita(nota, vel = .5, timeFromNow, dur){
+	polySynth.play(nota, vel, timeFromNow, dur);
+}
+
+function stopPlayer(){
+	//polySynth.dispose();
 }
