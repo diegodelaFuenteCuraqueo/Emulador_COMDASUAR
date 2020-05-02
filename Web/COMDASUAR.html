@@ -40,7 +40,10 @@
 	<!-- includes -->
 
 
+
 	<script src="js/text2COMDASUAR.js"></script>
+	
+	<script src="../ComdasuarLib.js"></script>
 
 	<script src="../asuar.js"></script>
 
@@ -185,7 +188,7 @@
 
 		  	<div class ="row">
 		  		<div class="col-2">
-		  			<p>Modo <code>J0</code></p>
+		  			<p><strong>Modo <code>J0</code></p></strong>
 		  		</div>
 		  		<div class="col-8">
 		  			<p>Es el modo normal visto en los ejemplos anteriores. Para cada tono se indica su altura y duración.</p>
@@ -194,7 +197,7 @@
 
 	  		<div class ="row">
 		  		<div class="col-2">
-		  			<p>Modo <code>J1</code>
+		  			<p><strong>Modo <code>J1</code></strong>
 		  			<br> Duración constante</p>
 		  		</div>
 		  		<div class="col-8">
@@ -204,7 +207,7 @@
 
 	  		<div class ="row">
 		  		<div class="col-2">
-		  			<p>Modo <code>J2</code>
+		  			<p><strong>Modo <code>J2</code></strong>
 		  			<br>Altura constante</p></p>
 		  		</div>
 		  		<div class="col-8">
@@ -214,7 +217,7 @@
 
 	  		<div class ="row">
 		  		<div class="col-2">
-		  			<p>Modo <code>J4</code>
+		  			<p><strong>Modo <code>J4</code></strong>
 		  			<br>Reiteración</p></p>
 		  		</div>
 		  		<div class="col-8">
@@ -224,7 +227,7 @@
 
 	  		<div class ="row">
 		  		<div class="col-2">
-		  			<p>Modo <code>J5</code>
+		  			<p><strong>Modo <code>J5</code></strong>
 		  			<br>Repite pasaje</p></p>
 		  		</div>
 		  		<div class="col-8">
@@ -243,11 +246,11 @@
   		<h1>Emulador COMDASUAR</h1>
   		<!-- ENTRADA DE CÓDIGO ASUAR-->
   		<div class="row">
-  			<div class="col-8">
+  			<div class="col-10">
   				<textarea id="textoDeEntrada" class="form-control txtArea" name="textoDeEntrada" rows="20" cols="10">j1 c 4d e f g a bw cs bw a g f e f d e f g a 3bw 4a g f e d j0 d n a n 5d n </textarea>
   			</div>
 
-  			<div class="col-2">
+  			<div class="col-1">
   				<div class="mini-box">
 					<button class="btn-submit" id="btnCompilar" name="btnCompilar" onclick="compilarTexto()">Compilar</button>
 				</div>
@@ -273,26 +276,23 @@
 					</table>
 				</div>
 			</div>
-						
-			
 			
 			<div class="row" id="sketch-holder">
+				<div class="col">
 				<script type="text/javascript" src="js/reproductorDeSeq.js"></script>
 			</div>
-		</div>
+			</div>
 
-		
+		</div>
+						
 		<br>
 		<!-- TABLA PARA VISUALIZAR DATOS DURANTE REPRODUCCIÓN -->
 			
 	</div>
 
-		
-
-	</div>
 
 	<footer>
-	<div class="container center">
+	<div class="container center_div">
 		<p>Proyecto desarrollado por <br>Diego de la Fuente Curaqueo 
 			<br> diego.delafuente@ug.uchile.cl</p>
 	</div>
