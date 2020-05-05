@@ -81,6 +81,9 @@ function getSecuencia(indx){
 		var d = array2list(bancoDeSecuencias[indx].seqDurs);
 		var str = "bach (("+o+"))"+"(("+p+"))"+"(("+d+"))";
 		outlet(0,str);
+		//outlet(0,"bach onset (("+o+"))");
+		//outlet(0,"bach pitch (("+p+"))");
+		//outlet(0,"bach durs (("+d+"))");
 	}catch (error){
 		post("secuencia vacía");
 	}

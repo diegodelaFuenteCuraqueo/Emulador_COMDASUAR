@@ -64,7 +64,7 @@ function cargarPartitura(lst){
 	var cad = lst.toUpperCase();
 	listIn = textoDeEntrada2ListaDeEventos(cad);
 	convertir(listIn);	//probado reconocimiento de j, momentaneamente
-	console.log("partitura Cargada");
+	//console.log("partitura Cargada");
 }
 
 function convertir( lista ){ //para probar el reconocimiento de modos J
@@ -459,8 +459,11 @@ function reproducir(indx){
 }
 
 function guardarSeqEnBanco(ix){
-	var s = "TO-BancoDeSeq setSeqO "+array2list(seqOnsets)+", setSeqN "+array2list(seqMidinotes)+", setSeqD "+array2list(seqMs);
-	outlet(0,s+" , guardarSecuencia "+ix);
+//	var s = "TO-BancoDeSeq setSeqO "+array2list(seqOnsets)+", setSeqN "+array2list(seqMidinotes)+", setSeqD "+array2list(seqMs);
+	outlet(0,"TO-BancoDeSeq setSeqO "+array2list(seqOnsets));
+	outlet(0,"TO-BancoDeSeq setSeqN "+array2list(seqMidinotes));
+	outlet(0,"TO-BancoDeSeq setSeqD "+array2list(seqMs));
+	outlet(0,"guardarSecuencia "+ix);
 
 }
 
