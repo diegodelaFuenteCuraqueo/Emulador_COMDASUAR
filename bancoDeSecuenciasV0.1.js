@@ -6,6 +6,8 @@ var elObjeto  = new Secuencia();;
 
 //- - - - - Objeto Secuencia - - - - - //
 function Secuencia ()  {
+	this.stringIn = "";
+	this.listaEventos = [];
 	this.seqNotas 	= [];
 	this.seqDurs 	= [];
 	this.seqOnsets 	= [];
@@ -13,22 +15,57 @@ function Secuencia ()  {
 	this.seqName 	= "seq1";
 	this.seqCleff 	= "";
 	
-	this.setSeqNotas= 	function (seqN){	this.seqNotas = seqN.slice(0);}
-	this.setSeqDurs = 	function (seqN){	this.seqDurs = seqN.slice(0);}
-	this.setSeqOns 	= 	function (seqN){	this.seqOnsets = seqN.slice(0);}
+	this.setStringIn		= function (str){	this.stringIn = str;}
+	this.setSeqListaEventos	= function (seqN){	this.listaEventos = seqN.slice(0);}
+	this.setSeqNotas		= function (seqN){	this.seqNotas = seqN.slice(0);}
+	this.setSeqDurs 		= function (seqN){	this.seqDurs = seqN.slice(0);}
+	this.setSeqOns 			= function (seqN){	this.seqOnsets = seqN.slice(0);}
 	
-	this.getSeqNotas= 	function (){		outlet(0,"notas "+this.seqNotas.length);}
-	this.getSeqDurs = 	function (){		outlet(0,"durs "+this.seqDurs.length);}		
-	this.getSeqOns 	= 	function (){		outlet(0,"onsets "+this.seqOnsets.length);}
+	this.getStringIn		= function (){	return this.stringIn;}
+
+	//getter de arrays
+	this.getListaEventos= function (){	
+		try{	outlet(0,"notas "+this.listaEventos.length);
+		}catch(e){}
+		return this.listaEventos;}
+	this.getSeqNotas	= function (){	
+		try{	outlet(0,"notas "+this.seqNotas.length); 	
+		}catch(e){}
+		return this.seqNotas;}
+	this.getSeqDurs 	= function (){	
+		try{	outlet(0,"durs "+this.seqDurs.length);		
+		}catch(e){}
+		return this.seqDurs;}		
+	this.getSeqOns 		= function (){	
+		try{	outlet(0,"onsets "+this.seqOnsets.length);	
+		}catch(e){}
+		return this.seqOnsets;}
 	
-	this.getNota 	= 	function (inx){		outlet(0,this.seqNotas[inx]);}
-	this.getDur 	= 	function (inx){		outlet(0,this.seqDurs[inx]);}
-	this.getOn 		= 	function (inx){		outlet(0,this.seqOns[inx]);}
+	//Getters por indice de array
+	this.getEvento		= function (inx){
+		try{	outlet(0,this.listaEventos[inx]);	
+		}catch(e){}
+		return this.listaEventos[inx];}
+	this.getNota 		= function (inx){
+		try{	outlet(0,this.seqNotas[inx]);		
+		}catch(e){}
+		return this.seqNotas[inx];}
+	this.getDur 		= function (inx){
+		try{	outlet(0,this.seqDurs[inx]);		
+		}catch(e){}
+		return this.seqDurs[inx];}
+	this.getOn 			= function (inx){
+		try{	outlet(0,this.seqOns[inx]);			
+		}catch(e){}
+		return this.seqOns[inx];}
 		
-	this.copiarOtraSeq = function(seqIn){
-		this.seqNotas = seqIn.seqNotas.slice(0);
-		this.seqDurs = seqIn.seqDurs.slice(0);
-		this.seqOnsets = seqIn.seqOnsets.slice(0);
+	//copiar otra secuencia (todas las listas)
+	this.copiarOtraSeq 		= function(seqIn){
+		this.stringIn		= seqIn.stringIn;
+		this.seqNotas 		= seqIn.seqNotas.slice(0);
+		this.seqDurs 		= seqIn.seqDurs.slice(0);
+		this.seqOnsets 		= seqIn.seqOnsets.slice(0);
+		this.listaEventos 	= seqIn.listaEventos.slice(0);
 	}
 }//- - - - - - - - - - - - - - - - - //
 
@@ -37,12 +74,24 @@ function setSeqName(n){
 	elObjeto.seqName = n;
 }
 
+function setStringIn(s){
+	elObjeto.stringIn = s;
+}
+
+function setSeqListaEventos(lst){
+	var lista = [];
+	for (var x = 0; x < arguments.length; x++){
+		lista[x] = arguments[x];}
+	elObjeto.setSeqListaEventos(lista);
+	try{ post(arguments.length); }catch(e){}
+}
+
 function setSeqN(lst){
 	var lista = [];
 	for (var x = 0; x < arguments.length; x++){
 		lista[x] = arguments[x];}
 	elObjeto.setSeqNotas(lista);
-	post(arguments.length);
+	try { post(arguments.length); }catch(e){}
 }
 
 function setSeqD(lst){
@@ -50,7 +99,7 @@ function setSeqD(lst){
 	for (var x = 0; x < arguments.length; x++){
 		lista[x] = arguments[x];}
 	elObjeto.setSeqDurs(lista);
-	post(arguments.length);
+	try { post(arguments.length); }catch(e){}
 }
 
 function setSeqO(lst){	
@@ -58,7 +107,7 @@ function setSeqO(lst){
 	for (var x = 0; x < arguments.length; x++){
 		lista[x] = arguments[x];}
 	elObjeto.setSeqOns(lista);
-	post(arguments.length);
+	try { post(arguments.length); }catch(e){}
 }
 
 function getSeqN(){		elObjeto.getSeqNotas();}
@@ -122,3 +171,31 @@ function array2list(ar){
 }
 
 
+//html selector
+
+var contadorDeSeq = 0;	
+
+function guardarSeqEnBancoYSelect(){ 
+	var sel = document.getElementById("bancoDeSeq");
+
+	sel.options[sel.options.length] = new Option('seq'+contadorDeSeq,contadorDeSeq);
+	setSeqO(seqOnsets);
+	setSeqN(seqMidinotes);
+	setSeqD(seqMs);
+	setStringIn(stringIn);
+	setSeqListaEventos(listIn);
+	guardarSecuencia(contadorDeSeq++);
+
+	//guardarSeqEnBanco(contadorDeSeq++); //asuar.js
+}
+
+
+function cargarSeqDesdeBanco(){
+	var sel = document.getElementById("bancoDeSeq");
+
+	var seqDelBanco = parseInt (sel.options[sel.selectedIndex].value) ;
+
+	$("#textoDeEntrada").val( bancoDeSecuencias[seqDelBanco].stringIn );
+
+
+}

@@ -46,6 +46,7 @@
 	<script src="../ComdasuarLib.js"></script>
 
 	<script src="../asuar.js"></script>
+	<script src="../bancoDeSecuenciasV0.1.js"></script>
 
 	<link rel="stylesheet" href="style/style.css">
 
@@ -271,6 +272,19 @@ j5 1 7
 					<button class="btn-submit" id="btnPlayNotita" name="btnPlayNotita" onclick="playNotita()">test</button>
 				</div>
 			</br>
+				<div class="mini-box">
+					<select class="form-control"  id='bancoDeSeq' name='bancoDeSeq' onClick="">
+						 </select>
+				</div>
+
+				<div class="mini-box">
+					<button class="btn btn-default" id="guardarSeqEnBanco" name="guardarSeqEnBanco" onclick="guardarSeqEnBancoYSelect()">Almacenar nueva secuencia</button>
+				</div>
+
+				<div class="mini-box">
+					<button class="btn btn-default" id="cargarSeqDesdeBanco" name="cargarSeqDesdeBanco" onclick="cargarSeqDesdeBanco()">Cargar secuencia</button>
+				</div>
+
  				<div class="mini-box">
 					<table>
 						<thead>

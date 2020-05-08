@@ -23,15 +23,16 @@
 //																   		//
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -	- - */
 
-autowatch = 1;
-outlets = 4;
+autowatch 	= 1;
+outlets 	= 4;
 
-var notas = { "C":0,"D":2,"E":4,"F":5,"G":7,"A":9,"B":11,"R": -200 };
-var alteraciones = {"S":1, "W":-1, "U":.5, "T":1.5, "V":-.5, "R":-1.5,}	;
-var ritmos	=	{"L":8000,"R":4000, "B":2000, "N":1000,"C":500,"S":250,"F":125,"M":67.5, "P":0.5 }
-var subdivs = {"0": 1, "3": 0.6666666, "5":.8 , "7":0.875}
+var notas 		= { "C":0,"D":2,"E":4,"F":5,"G":7,"A":9,"B":11,"R": -200 };
+var alteraciones= {"S":1, "W":-1, "U":.5, "T":1.5, "V":-.5, "R":-1.5,}	;
+var ritmos		=	{"L":8000,"R":4000, "B":2000, "N":1000,"C":500,"S":250,"F":125,"M":67.5, "P":0.5 }
+var subdivs 	= {"0": 1, "3": 0.6666666, "5":.8 , "7":0.875}
 	
-var listIn = [];
+var stringIn = "";
+var listIn 	= [];
 var seqNotas = [];
 var seqDuraciones = [];
 var seqMidinotes = [];
@@ -62,6 +63,7 @@ function cargarPartitura(lst){
 	J5indxDesde = 0; J5indxHasta = 0; J4indxDesde = 0;J4indxHasta = 0;
 	
 	var cad = lst.toUpperCase();
+	stringIn = cad;
 	listIn = textoDeEntrada2ListaDeEventos(cad);
 	convertir(listIn);	//probado reconocimiento de j, momentaneamente
 	//console.log("partitura Cargada");
@@ -458,12 +460,23 @@ function reproducir(indx){
 	}
 }
 
-function guardarSeqEnBanco(ix){
+function guardarSeqEnBanco(ix){ 
 //	var s = "TO-BancoDeSeq setSeqO "+array2list(seqOnsets)+", setSeqN "+array2list(seqMidinotes)+", setSeqD "+array2list(seqMs);
-	outlet(0,"TO-BancoDeSeq setSeqO "+array2list(seqOnsets));
-	outlet(0,"TO-BancoDeSeq setSeqN "+array2list(seqMidinotes));
-	outlet(0,"TO-BancoDeSeq setSeqD "+array2list(seqMs));
-	outlet(0,"guardarSecuencia "+ix);
+	try{
+		outlet(0,"TO-BancoDeSeq setSeqO "+array2list(seqOnsets));
+		outlet(0,"TO-BancoDeSeq setSeqN "+array2list(seqMidinotes));
+		outlet(0,"TO-BancoDeSeq setSeqD "+array2list(seqMs));
+		outlet(0,"guardarSecuencia "+ix);
+	}catch(e){}
+
+	try{ //funciones en bancoDeSeqs..js
+		setSeqO(seqOnsets);
+		setSeqN(seqMidinotes);
+		setSeqD(seqMs);
+		setSeqSI(stringIn);
+		setSeqListaEventos(listIn);
+		guardarSecuencia(ix);
+	}catch(err){ }
 
 }
 
