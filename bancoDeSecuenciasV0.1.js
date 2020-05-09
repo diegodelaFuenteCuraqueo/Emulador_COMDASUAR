@@ -75,7 +75,7 @@ function setSeqName(n){
 }
 
 function setStringIn(s){
-	elObjeto.stringIn = s;
+	elObjeto.setStringIn(s);
 }
 
 function setSeqListaEventos(lst){
