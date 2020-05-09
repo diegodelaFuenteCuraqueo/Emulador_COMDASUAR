@@ -177,6 +177,11 @@ var contadorDeSeq = 0;
 
 function guardarSeqEnBancoYSelect(){ 
 	var sel = document.getElementById("bancoDeSeq");
+	
+	let textoIn = $("#textoDeEntrada").val();
+	console.log(textoIn);
+	cargarPartitura(textoIn);
+
 
 	sel.options[sel.options.length] = new Option('seq'+contadorDeSeq,contadorDeSeq);
 	setSeqO(seqOnsets);
@@ -185,6 +190,7 @@ function guardarSeqEnBancoYSelect(){
 	setStringIn(stringIn);
 	setSeqListaEventos(listIn);
 	guardarSecuencia(contadorDeSeq++);
+
 
 	//guardarSeqEnBanco(contadorDeSeq++); //asuar.js
 }

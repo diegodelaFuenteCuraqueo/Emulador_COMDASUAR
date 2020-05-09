@@ -247,8 +247,8 @@
   		<h1>Emulador COMDASUAR</h1>
   		<!-- ENTRADA DE CÓDIGO ASUAR-->
   		<div class="row">
-  			<div class="col-10">
-  				<textarea id="textoDeEntrada" class="form-control txtArea" name="textoDeEntrada" rows="20" cols="10">4c n
+  			<div class="col-3">
+  				<textarea id="textoDeEntrada" class="form-control txtArea" name="textoDeEntrada" rows="28" cols="10">4c n
 j1 c
 e
 g
@@ -260,29 +260,32 @@ j0
 5c b
 4g b
 j5 1 7
-5c r </textarea>
+5c r
+				 </textarea>
   			</div>
 
-  			<div class="col-1">
+  			<div class="col-4">
   				<div class="mini-box">
-					<button class="btn-submit" id="btnCompilar" name="btnCompilar" onclick="compilarTexto()">Compilar</button>
+  					<label for="btnCompilar">Compilar y reproducir secuencia</label>
+					<button class="btn" id="btnCompilar" name="btnCompilar" onclick="compilarTexto()">Compilar</button>
 				</div>
-			</br>
+			<!--
 				<div class="mini-box">
 					<button class="btn-submit" id="btnPlayNotita" name="btnPlayNotita" onclick="playNotita()">test</button>
 				</div>
-			</br>
+			-->
 				<div class="mini-box">
-					<select class="form-control"  id='bancoDeSeq' name='bancoDeSeq' onClick="">
-						 </select>
+					<label for="guardarSeqEnBanco">Guardar secuencia en la memoria.</label>
+					<button class="btn " id="guardarSeqEnBanco" name="guardarSeqEnBanco" onclick="guardarSeqEnBancoYSelect()">Guardar
+					</button>
 				</div>
 
 				<div class="mini-box">
-					<button class="btn btn-default" id="guardarSeqEnBanco" name="guardarSeqEnBanco" onclick="guardarSeqEnBancoYSelect()">Almacenar nueva secuencia</button>
-				</div>
-
-				<div class="mini-box">
-					<button class="btn btn-default" id="cargarSeqDesdeBanco" name="cargarSeqDesdeBanco" onclick="cargarSeqDesdeBanco()">Cargar secuencia</button>
+					<label for="bancoDeSeq">Banco de secuencias (MEMORIA)</label>
+					<select class="selectpicker"  id='bancoDeSeq' name='bancoDeSeq' onClick=""> </select>
+					<br>
+					<label for="cargarSeqDesdeBanco">Cargar secuencia seleccionada</label>
+					<button class="btn " id="cargarSeqDesdeBanco" name="cargarSeqDesdeBanco" onclick="cargarSeqDesdeBanco()">Cargar </button>
 				</div>
 
  				<div class="mini-box">
@@ -302,9 +305,10 @@ j5 1 7
 					</table>
 				</div>
 			</div>
-			
+
+		</div>
 			<div class="row">
-				<div class="col">
+				<div class="col-12">
 					<input id="files" name="files" type="file" value="Subir código" />
 				</div>
 			</div>
