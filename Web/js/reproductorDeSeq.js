@@ -1,4 +1,29 @@
 let polySynth;
+    
+var stringsDeArchivo = "";
+var arregloLineasArchivo = [];
+
+function preload(){
+}
+
+function cargarArchivoJVA(rutaAlArchivo){
+	//stringsDeArchivo = loadStrings(rutaAlArchivo);
+	archivoCargado(rutaAlArchivo);
+}
+
+function cargarStrings(){
+
+	loadStrings("", archivoCargado);
+}
+
+function archivoCargado(data){
+	stringsDeArchivo=data;
+	
+	var arregloLineasArchivo = [];
+	arregloLineasArchivo = stringsDeArchivo.data.split(/\r?\n/);
+	cargarArchivoAlBanco(arregloLineasArchivo);
+
+}
 
 function setup(){
 
@@ -6,6 +31,7 @@ function setup(){
 	frameRate(85);
 	canvas.parent('sketch-holder');
 
+	createFileInput(archivoCargado);
 
   	polySynth = new p5.PolySynth();
   	polySynth.setADSR(0.01, 0.01, .6,0.05);
@@ -29,5 +55,8 @@ function playNotita(nota, vel = .5, timeFromNow, dur){
 }
 
 function stopPlayer(){
+	//polySynth = null;
+	 //polySynth = new p5.PolySynth();
+
 	//polySynth.dispose();
 }

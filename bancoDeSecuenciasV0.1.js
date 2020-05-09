@@ -177,7 +177,7 @@ var contadorDeSeq = 0;
 
 function guardarSeqEnBancoYSelect(){ 
 	var sel = document.getElementById("bancoDeSeq");
-	
+
 	let textoIn = $("#textoDeEntrada").val();
 	console.log(textoIn);
 	cargarPartitura(textoIn);
@@ -195,13 +195,28 @@ function guardarSeqEnBancoYSelect(){
 	//guardarSeqEnBanco(contadorDeSeq++); //asuar.js
 }
 
-
 function cargarSeqDesdeBanco(){
 	var sel = document.getElementById("bancoDeSeq");
 
 	var seqDelBanco = parseInt (sel.options[sel.selectedIndex].value) ;
 
 	$("#textoDeEntrada").val( bancoDeSecuencias[seqDelBanco].stringIn );
-
-
 }
+
+function cargarArchivoAlBanco(arregloDeTxts){
+
+	//confirm("esto borrará toaa la wea q tenga el banco")
+	contadorDeSeq = 0;
+
+	$('#bancoDeSeq').empty();
+    
+	//$("#bancoDeSeq option[value='X']").remove();
+	//habría q borrar las opciones del select
+	//bancoDeSecuencias = [];
+	for(var i = 0; i > arregloDeTxts.length;i++){
+		$("#textoDeEntrada").val( arregloDeTxts[i] );
+		console.log(arregloDeTxts[i] );
+		guardarSeqEnBancoYSelect();
+	}
+}
+

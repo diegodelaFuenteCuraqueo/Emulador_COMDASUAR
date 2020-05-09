@@ -5,6 +5,9 @@ function compilarTexto(){
 	play();
 }
 
+function stopReproduccion(){
+	
+}
 
 
 $( document ).ready(function() {

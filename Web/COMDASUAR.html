@@ -46,6 +46,8 @@
 	<script src="../ComdasuarLib.js"></script>
 
 	<script src="../asuar.js"></script>
+		<script src="js/importarExportarFormatoJVA.js"></script>
+
 	<script src="../bancoDeSecuenciasV0.1.js"></script>
 
 	<link rel="stylesheet" href="style/style.css">
@@ -266,8 +268,10 @@ j5 1 7
 
   			<div class="col-4">
   				<div class="mini-box">
-  					<label for="btnCompilar">Compilar y reproducir secuencia</label>
+  					<label for="btnCompilar">Compilar y reproducir secuencia</label></br>
 					<button class="btn" id="btnCompilar" name="btnCompilar" onclick="compilarTexto()">Compilar</button>
+
+					<button class="btn" id="btnStop" name="btnStop" onclick="stopPlayer()">Stop</button>
 				</div>
 			<!--
 				<div class="mini-box">
@@ -275,7 +279,7 @@ j5 1 7
 				</div>
 			-->
 				<div class="mini-box">
-					<label for="guardarSeqEnBanco">Guardar secuencia en la memoria.</label>
+					<label for="guardarSeqEnBanco">Guardar secuencia en la memoria.</label></br>
 					<button class="btn " id="guardarSeqEnBanco" name="guardarSeqEnBanco" onclick="guardarSeqEnBancoYSelect()">Guardar
 					</button>
 				</div>
@@ -284,7 +288,7 @@ j5 1 7
 					<label for="bancoDeSeq">Banco de secuencias (MEMORIA)</label>
 					<select class="selectpicker"  id='bancoDeSeq' name='bancoDeSeq' onClick=""> </select>
 					<br>
-					<label for="cargarSeqDesdeBanco">Cargar secuencia seleccionada</label>
+					<label for="cargarSeqDesdeBanco">Cargar secuencia seleccionada</label></br>
 					<button class="btn " id="cargarSeqDesdeBanco" name="cargarSeqDesdeBanco" onclick="cargarSeqDesdeBanco()">Cargar </button>
 				</div>
 
@@ -304,20 +308,39 @@ j5 1 7
 						</tr>
 					</table>
 				</div>
-			</div>
 
-		</div>
-			<div class="row">
-				<div class="col-12">
-					<input id="files" name="files" type="file" value="Subir código" />
+				<div class="row">
+
+					<div class="col-6">
+
+						<label for="files">Subir archivo</label>
+						<br>
+						<input id="subirArchivo" name="subirArchivo" type="button" value="subir" onclick="archivoCargado(this)"/>
+
+						<label for="files">Descargar archivo</label>
+						<br>
+						<input id="descargarArchivo" name="descargarArchivo" type="file" value="descargar" onclick="descargarFile()"/>
+						
+						
+					</div>
 				</div>
-			</div>
-
-			<div class="row" id="sketch-holder">
+				
+				<div class="row" id="sketch-holder">
 				<div class="col">
 					<script type="text/javascript" src="js/reproductorDeSeq.js"></script>
 				</div>
+
 			</div>
+
+			</div>
+
+
+		</div>
+			
+
+			</div>
+
+			
 
 		</div>
 						
