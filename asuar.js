@@ -104,8 +104,7 @@ function convertir( lista ){ //para probar el reconocimiento de modos J
 					}
 				}
 				J4_ACTIVE = false;
-				//post ("J4 repitiendo desde "+J4indxDesde+" a "+J4indxHasta);
-				
+				//post ("J4 repitiendo desde "+J4indxDesde+" a "+J4indxHasta);	
 			}	
 			
 			if(evento[evento.indexOf('J')+1] == "0"){ //MODO 0 NOMRAL - - - - - - - - - - -
@@ -182,6 +181,7 @@ function convertir( lista ){ //para probar el reconocimiento de modos J
 				i += 2;
 				continue;
 			}
+
 		}  
 		
 		//SI EL EVENTO NO PARTE CON J ENTONCES ES UN SONIDO: - - - - - - - - - - - - - - - - - - 
@@ -466,6 +466,8 @@ function guardarSeqEnBanco(ix){
 		outlet(0,"TO-BancoDeSeq setSeqO "+array2list(seqOnsets));
 		outlet(0,"TO-BancoDeSeq setSeqN "+array2list(seqMidinotes));
 		outlet(0,"TO-BancoDeSeq setSeqD "+array2list(seqMs));
+		outlet(0,"TO-BancoDeSeq setSeqName Seq"+ix);
+		
 		outlet(0,"guardarSecuencia "+ix);
 	}catch(e){}
 

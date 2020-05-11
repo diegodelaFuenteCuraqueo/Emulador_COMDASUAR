@@ -1,0 +1,63 @@
+import java.util.*;
+
+class secuenciaMusical{
+  
+  String stringIn = "";
+  String seqName   = "sequence1";
+  ArrayList <String> listaEventos = new ArrayList<String>();
+  
+  ArrayList <String> seqNotas     = new ArrayList<String>();
+  ArrayList <String> seqDurs      = new ArrayList<String>();
+  ArrayList <String> seqOnsets    = new ArrayList<String>();
+  ArrayList <String> seqVels       = new ArrayList<String>(); 
+  String seqCleff     = "";
+  
+  secuenciaMusical(String name){
+    this.seqName = name;
+    println("Creando secuencia "+this.seqName);
+  }
+  //SETTERS DATOS SECUENCIA
+  void setSeqName       (String str)   {  this.seqName      = str;}
+  void setStringIn      (String str)   {  this.stringIn     = str;}
+  void setSeqListaEvent (String[] seqN){  this.listaEventos = new ArrayList<String>(Arrays.asList(seqN));}
+  void setSeqNotas      (String[] seqN){  this.seqNotas     = new ArrayList<String>(Arrays.asList(seqN));}
+  void setSeqDurs       (String[] seqN){  this.seqDurs      = new ArrayList<String>(Arrays.asList(seqN));}
+  void setSeqVels       (String[] seqN){  this.seqVels      = new ArrayList<String>(Arrays.asList(seqN));}
+  void setSeqOns        (String[] seqN){  this.seqOnsets    = new ArrayList<String>(Arrays.asList(seqN));}
+  
+  //GETTERS
+  String getStringIn (){  return this.stringIn;}
+  String getSeqName  (){  return this.seqName;}
+
+  //getters de arrays
+  String [] getListaEventos(){ return this.listaEventos.toArray(new String[0]);}
+  String [] getSeqNotas    (){ return this.seqNotas.toArray(new String[0]);}
+  String [] getSeqDurs     (){ return this.seqDurs.toArray(new String[0]);}    
+  String [] getSeqOns      (){ return this.seqOnsets.toArray(new String[0]);}
+  String [] getSeqVels     (){ return this.seqVels.toArray(new String[0]);}
+
+  //Getters por indice de array
+  String getEvento(int inx){
+    return this.listaEventos.get(inx);}
+  String getNota(int inx){
+    return this.seqNotas.get(inx);}
+  String getDur(int inx){
+    return this.seqDurs.get(inx);}
+  String getOn(int inx){
+    return this.seqOnsets.get(inx);}
+    
+  //copiar otra secuencia (todas las listas)
+  void copiarOtraSeq     (secuenciaMusical seqIn){
+    this.seqName      = seqIn.getSeqName();
+    this.stringIn     = seqIn.getStringIn();
+    this.seqNotas     = this.seqNotas.toArray(new String[0]);
+    this.seqDurs      = Arrays.asList(seqIn.getSeqDurs());
+    this.seqOnsets    = Arrays.asList(seqIn.getSeqOns());
+    this.seqOnsets    = Arrays.asList(seqIn.getSeqVels());
+    this.listaEventos = Arrays.asList(seqIn.getListaEventos());
+  }
+
+
+
+
+}

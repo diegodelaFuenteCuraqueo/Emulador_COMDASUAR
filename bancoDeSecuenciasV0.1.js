@@ -12,9 +12,10 @@ function Secuencia ()  {
 	this.seqDurs 	= [];
 	this.seqOnsets 	= [];
 	this.seqVel 	= []; 
-	this.seqName 	= "seq1";
+	this.seqName 	= "sequence1";
 	this.seqCleff 	= "";
 	
+	this.setSeqName			= function (str){	this.seqName = str;}
 	this.setStringIn		= function (str){	this.stringIn = str;}
 	this.setSeqListaEventos	= function (seqN){	this.listaEventos = seqN.slice(0);}
 	this.setSeqNotas		= function (seqN){	this.seqNotas = seqN.slice(0);}
@@ -22,6 +23,7 @@ function Secuencia ()  {
 	this.setSeqOns 			= function (seqN){	this.seqOnsets = seqN.slice(0);}
 	
 	this.getStringIn		= function (){	return this.stringIn;}
+	this.getSeqName			= function (){	return this.seqName;}
 
 	//getter de arrays
 	this.getListaEventos= function (){	
@@ -61,6 +63,7 @@ function Secuencia ()  {
 		
 	//copiar otra secuencia (todas las listas)
 	this.copiarOtraSeq 		= function(seqIn){
+		this.seqName		= seqIn.getSeqName;
 		this.stringIn		= seqIn.stringIn;
 		this.seqNotas 		= seqIn.seqNotas.slice(0);
 		this.seqDurs 		= seqIn.seqDurs.slice(0);
@@ -71,7 +74,7 @@ function Secuencia ()  {
 
 
 function setSeqName(n){
-	elObjeto.seqName = n;
+	elObjeto.setSeqName(n);
 }
 
 function setStringIn(s){
@@ -110,6 +113,7 @@ function setSeqO(lst){
 	try { post(arguments.length); }catch(e){}
 }
 
+function getSeqName(){	elObjeto.getSeqName();}
 function getSeqN(){		elObjeto.getSeqNotas();}
 function getSeqD(){		elObjeto.getSeqDurs();}
 function getSeqO(){		elObjeto.getSeqOns();}
@@ -121,6 +125,11 @@ function getO(ic){		elObjeto.getOns(ic);}
 function guardarSecuencia(indx){
 	bancoDeSecuencias[indx] = new Secuencia;
 	bancoDeSecuencias[indx].copiarOtraSeq(elObjeto);
+	
+	try{
+		var pitchMap = this.patcher.getnamed("bancoDeVocesMenu");
+		//pitchMap.message("append seq"+(indx));
+	}catch (e) {}
 }
 
 function getSecuencia(indx){
@@ -177,8 +186,9 @@ var contadorDeSeq = 0;
 
 function guardarSeqEnBancoYSelect(){ 
 	var sel = document.getElementById("bancoDeSeq");
-
-	let textoIn = $("#textoDeEntrada").val();
+	
+	try{
+	var textoIn = $("#textoDeEntrada").val();} catch (e) {}
 	console.log(textoIn);
 	cargarPartitura(textoIn);
 
@@ -187,6 +197,7 @@ function guardarSeqEnBancoYSelect(){
 	setSeqO(seqOnsets);
 	setSeqN(seqMidinotes);
 	setSeqD(seqMs);
+	setSeqName('Seq'+contadorDeSeq);
 	setStringIn(stringIn);
 	setSeqListaEventos(listIn);
 	guardarSecuencia(contadorDeSeq++);
