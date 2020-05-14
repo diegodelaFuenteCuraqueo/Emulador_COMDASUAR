@@ -14,8 +14,8 @@
 }
 
 h1, h2, h3{
-	padding: 30px 15px 20px 15px;
-	margin: 20px 15px auto;
+	padding: 5px 5px 5px 5px;
+	margin: 5px 5px ;
 	
 	color: black;
 	text-shadow: 3px 3px rgba(0,0,0,.3);
@@ -58,6 +58,19 @@ body{
 	src: url("../KarmaSuture.ttf");
  	font-weight: normal;
   	font-style: normal}
+
+#COMDASUARcontainer{
+
+	background-image: url("../assets/sampoTV.png");
+	background-size: auto;
+
+	background-position:  center -20px;
+
+  	
+
+	background-repeat: no-repeat;
+
+}
 
 #textoDeEntrada{
 

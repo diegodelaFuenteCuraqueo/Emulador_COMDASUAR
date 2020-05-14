@@ -1,5 +1,6 @@
 import java.util.regex.*;
 
+
 class CompiladorComdasuar{
   public final HashMap<String, String> OCTAVA = new HashMap<String, String>(); {{
     OCTAVA.put("0","12");
@@ -131,21 +132,16 @@ class CompiladorComdasuar{
 
       //Si el evento contiene una J es un cambio de modo
       if(eventoAsuarActual.indexOf("J") > -1){
-        println(eventoAsuarActual+" ES MODO");
+        
         //el char q viene luego de la 'J' es el numero d modoJindicado
         String modoJindicado = Character.toString(eventoAsuarActual.charAt(eventoAsuarActual.indexOf("J")+1) );
         println("MODO : J"+modoJindicado);
-
-        //acá va toda la chamba de los modos j... harta pega papu
-
 
         if(J4_ACTIVE){  //cambiamos de modo, primero revisamos si j4 está activo
     
           J4indxHasta = seqsIndex;
           
           //copia el fragmento
-          //J4alt = AsuarSeqNota.slice(J4indxDesde,J4indxHasta+1);
-          //J4dur = AsuarSeqDur.slice(J4indxDesde,J4indxHasta+1);
           J4alt = this.AsuarSeqNota.subList(J4indxDesde, J4indxHasta+1);
           J4dur = this.AsuarSeqDur.subList(J4indxDesde, J4indxHasta+1);
           //inserta el fragmento copiado la cantidad de veces indicada
@@ -167,36 +163,32 @@ class CompiladorComdasuar{
         
         if(modoJindicado.equals("0")){ //MODO 0 NOMRAL - - - - - - - - - - -
           println("ACTIVANDO J"+modoJindicado);
-          //post("cambiando a modo J0\n");
-          JMODO_ACTIVO = 0;
+           JMODO_ACTIVO = 0;
           J2_ACTIVE = false;
           J1_ACTIVE = false;
           continue;
           
-        }else if(modoJindicado.equals("1")){ //modo 1 dur constante - - - - - 
+        }else if(modoJindicado.equals("1")){ //MODO 1 dur constante - - - - - 
           println("ACTIVANDO J"+modoJindicado);
           JMODO_ACTIVO = 1;
           J1duracionConst = lista[i+1];
           J2_ACTIVE = false;
           J1_ACTIVE = true;
-          //post("cambiando a modo J1: dur.const.:"+J1duracionConst+"\n");
-          i +=1;
+           i +=1;
           continue;
         
-        }else if(modoJindicado.equals("2")){ //modo 2 alt constante - - - - -
+        }else if(modoJindicado.equals("2")){ //MODO 2 alt constante - - - - -
            println("ACTIVANDO J"+modoJindicado);
           JMODO_ACTIVO = 2;
           J2_ACTIVE = true;
           J1_ACTIVE = false;
           
           J2alturaConst  = lista[i+1];
-          
-          //post("cambiando a modo J2: altura constante : "+J2alturaConst+"\n");
-          
+                   
           i +=1;
           continue; 
           
-        }else if(modoJindicado.equals("4") ){ //modo 4 rep.segmento - - - - - -
+        }else if(modoJindicado.equals("4") ){ //MODO 4 rep.segmento - - - - - -
           
           J4_ACTIVE = true;
           J4repeticiones = parseInt(lista[i+1]);
@@ -206,7 +198,7 @@ class CompiladorComdasuar{
           i+= 1;
           continue;
           
-        }else if(modoJindicado.equals("5")){ //modo 5 rep.seccion - - - - - - -
+        }else if(modoJindicado.equals("5")){ //MODO 5 rep.seccion - - - - - - -
           
           //JMODO_ACTIVO = 5;
           //LES RESTAMOS 1 PA Q QUEDEN EN NUMEROS CARDINALES 1º 2º
@@ -214,44 +206,36 @@ class CompiladorComdasuar{
           J5indxHasta = parseInt(lista[i+2])-1;
           //post("cambiando a modo J5, desde "+J5indxDesde+" hasta "+J5indxHasta+"\n");
           
-          int J5cantidadDeNotasRepetidas =0; 
           List <String> J5seqNotas = new ArrayList<String>(); 
           List <String> J5seqDurs = new ArrayList<String>();
+          
           //calcula segmentos a copiar
           if(J5indxHasta > J5indxDesde){
-            J5cantidadDeNotasRepetidas = J5indxHasta - J5indxDesde;
-            //J5seqNotas = seqNotas.slice(J5indxDesde,J5indxHasta+1);
-            //J5seqDurs = seqDuraciones.slice(J5indxDesde,J5indxHasta+1);
-            //subList(J4indxDesde, J4indxHasta+1);
             J5seqNotas = this.AsuarSeqNota.subList(J5indxDesde,J5indxHasta+1);
             J5seqDurs = this.AsuarSeqDur.subList(J5indxDesde,J5indxHasta+1);
           }else if (J5indxHasta < J5indxDesde){
-            J5cantidadDeNotasRepetidas = J5indxDesde - J5indxHasta;
-            //J5seqNotas = seqNotas.slice(J5indxHasta,J5indxDesde+1).reverse();
-            //J5seqDurs = seqDuraciones.slice(J5indxHasta,J5indxDesde+1).reverse();  
             J5seqNotas = this.AsuarSeqNota.subList(J5indxDesde,J5indxHasta+1);
             J5seqDurs = this.AsuarSeqDur.subList(J5indxDesde,J5indxHasta+1);
           }
-          //post(J5seqNotas+" "+J5seqDurs);
           
-          for(int inx = 0; inx < J5cantidadDeNotasRepetidas ; inx++){ // inserta la lista copiada
-
-            this.AsuarSeqNota.set(seqsIndex, J5seqNotas.get(inx) );
-            this.AsuarSeqDur.set(seqsIndex, J5seqDurs.get(inx) );
+          for(int l = 0 ;l < J5seqNotas.size(); l++){
+            String auxN = String.valueOf(this.asuar2MidiNote(J5seqNotas.get(l)));
+            J5seqNotas.set(l,auxN);
             
-            this.seqMidinotes.set(seqsIndex , String.valueOf( this.asuar2MidiNote(this.AsuarSeqNota.get(seqsIndex) ) ) );
-            this.seqMs.set(seqsIndex , String.valueOf( this.asuar2Ritmo(this.AsuarSeqDur.get(seqsIndex) ) ) );
-
-            seqsIndex++;
+            String auxD = String.valueOf(this.asuar2Ritmo(J5seqDurs.get(l)));
+            J5seqDurs.set(l,auxD);
           }
+          
+          this.seqMidinotes.addAll(J5seqNotas);
+          this.seqMs.addAll(J5seqDurs);
+          
           i += 2;
           continue;
         }
 
-        //FIN DE MODOS J
-      }else {
+      //FIN DE MODOS J
+      }else { //EL EVENTO ES SONIDO
 
-        
         //Si el evento no tiene J entonces es un sonido
         if(eventoAsuarActual.indexOf(".")>-1){
 
@@ -309,7 +293,7 @@ class CompiladorComdasuar{
 
   
    float asuar2MidiNote (String cod){
-    println("asuar2MidiNote ("+cod+")");
+    print("asuar2MidiNote ("+cod+")");
     if(cod == ""){ return this.ultimaNota; }
     
     float calcularNota = 0;
@@ -352,11 +336,12 @@ class CompiladorComdasuar{
         
     this.ultimaNota = calcularNota;
     //println(cod+" "+calcularNota);
+    print(" = "+calcularNota+"\n");
     return calcularNota;
   }
   
   float asuar2Ritmo (String cod){
-    println("asuar2Ritmo ("+cod+")");
+    print("asuar2Ritmo ("+cod+")");
     if(cod == ""){ return ultimoRitmo;}
    
     float calcularRitmo = 0;
@@ -383,7 +368,8 @@ class CompiladorComdasuar{
         println("Error al compilar ritmo: "+cod);}    
     }
     
-    this.ultimoRitmo = calcularRitmo;    
+    this.ultimoRitmo = calcularRitmo;   
+    print(" = "+calcularRitmo+"\n");
     return calcularRitmo;
   }
   

@@ -1,3 +1,4 @@
+import java.lang.instrument.Instrumentation;
 
 secuenciaMusical seq,seq2;
 
@@ -20,13 +21,20 @@ void setup(){
   //comp.asuar2MidiNote("5BS");
   
   //comp.cargarPartitura("J1 C 4C D E F G A");
-  comp.cargarPartitura(" 4C N 3D C F C G B");
+  //comp.cargarPartitura(" 4C N 3D C F C G B");
+  comp.cargarPartitura("4c n j1 c e g 5c 4b a b j0 5c b 4g b j5 1 7 5c r".toUpperCase()); //ejemplo que da asuar en su texto
   comp.compilarPartitura();
   comp.printElements();
+
+  
+  
   
   seq = new secuenciaMusical("Seq01");
   seq2 = new secuenciaMusical("Seq02");
 
+  
+  
+/*
   if(false){
   //ingresa listas con valores
   seq.setSeqNotas( notas );
@@ -102,6 +110,8 @@ void setup(){
   println(cadenaDePrueba);  
   textIn2ArregloEventosStr("hola  a todos   \n   uds");
   }
+  */
+  
 }
 
 void draw(){
