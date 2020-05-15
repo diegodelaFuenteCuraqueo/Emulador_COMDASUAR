@@ -108,7 +108,7 @@ class CompiladorComdasuar{
   void cargarPartitura(String txtIn){ //en js es cargarpartitura y texteDeEntrada2lista...
     String txtLimpio = txtIn.trim().replaceAll("\r", "").replaceAll("\n", "").replaceAll(" +", " ");
     this.textoDeEntrada = txtLimpio.toUpperCase();
-    this.EVENTOS = Arrays.asList(txtLimpio.split("\\s+") );
+    this.EVENTOS = Arrays.asList(textoDeEntrada.split("\\s+") );
     println("Partitura con "+EVENTOS.size()+" eventos.");
   }
 
