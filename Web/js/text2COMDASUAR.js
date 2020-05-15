@@ -99,6 +99,8 @@ $('#files').on('change', function () {
     $("#textoDeEntrada").text("s");
 });
 
+
+function midiToFreq(t) {return 440*Math.pow(2,(t-69)/12)}
 /*
 window.onload = function () {
 	MIDI.loadPlugin({
