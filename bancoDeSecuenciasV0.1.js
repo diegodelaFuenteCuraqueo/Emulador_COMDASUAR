@@ -1,5 +1,5 @@
 autowatch = 1;
-outlets = 1;
+outlets = 2;
 
 var bancoDeSecuencias = [];
 var elObjeto  = new Secuencia();;
@@ -13,6 +13,7 @@ function Secuencia ()  {
 	this.seqOnsets 	= [];
 	this.seqVel 	= []; 
 	this.seqName 	= "sequence1";
+	this.seqIndex;
 	this.seqCleff 	= "";
 	
 	this.setSeqName			= function (str){	this.seqName = str;}
@@ -21,10 +22,11 @@ function Secuencia ()  {
 	this.setSeqNotas		= function (seqN){	this.seqNotas = seqN.slice(0);}
 	this.setSeqDurs 		= function (seqN){	this.seqDurs = seqN.slice(0);}
 	this.setSeqOns 			= function (seqN){	this.seqOnsets = seqN.slice(0);}
+	this.setSeqIndex		= function (inx){	this.seqIndex = inx;}
 	
 	this.getStringIn		= function (){	return this.stringIn;}
 	this.getSeqName			= function (){	return this.seqName;}
-
+	this.getSeqIndex		= function (){	return this.seqIndex;}
 	//getter de arrays
 	this.getListaEventos= function (){	
 		try{	outlet(0,"notas "+this.listaEventos.length);
@@ -42,6 +44,7 @@ function Secuencia ()  {
 		try{	outlet(0,"onsets "+this.seqOnsets.length);	
 		}catch(e){}
 		return this.seqOnsets;}
+		
 	
 	//Getters por indice de array
 	this.getEvento		= function (inx){
@@ -63,7 +66,7 @@ function Secuencia ()  {
 		
 	//copiar otra secuencia (todas las listas)
 	this.copiarOtraSeq 		= function(seqIn){
-		this.seqName		= seqIn.getSeqName;
+		this.seqName		= seqIn.getSeqName();
 		this.stringIn		= seqIn.stringIn;
 		this.seqNotas 		= seqIn.seqNotas.slice(0);
 		this.seqDurs 		= seqIn.seqDurs.slice(0);
@@ -78,7 +81,7 @@ function setSeqName(n){
 }
 
 function setStringIn(s){
-	elObjeto.setStringIn(s);
+	elObjeto.setStringIn(arrayfromargs(s));
 }
 
 function setSeqListaEventos(lst){
@@ -86,7 +89,7 @@ function setSeqListaEventos(lst){
 	for (var x = 0; x < arguments.length; x++){
 		lista[x] = arguments[x];}
 	elObjeto.setSeqListaEventos(lista);
-	try{ post(arguments.length); }catch(e){}
+	try{ post("\n Tamaño lista "+arguments.length); }catch(e){}
 }
 
 function setSeqN(lst){
@@ -102,6 +105,14 @@ function setSeqD(lst){
 	for (var x = 0; x < arguments.length; x++){
 		lista[x] = arguments[x];}
 	elObjeto.setSeqDurs(lista);
+	try { post(arguments.length); }catch(e){}
+}
+
+function setSeqSI(lst){
+ 		var lista = [];
+	for (var x = 0; x < arguments.length; x++){
+		lista[x] = arguments[x];}
+	elObjeto.setSeqSI(lista);
 	try { post(arguments.length); }catch(e){}
 }
 
@@ -125,9 +136,13 @@ function getO(ic){		elObjeto.getOns(ic);}
 function guardarSecuencia(indx){
 	bancoDeSecuencias[indx] = new Secuencia;
 	bancoDeSecuencias[indx].copiarOtraSeq(elObjeto);
+	bancoDeSecuencias[indx].setSeqIndex(bancoDeSecuencias.length-1);
+	
+	outlet(1,indx);
 	
 	try{
 		var pitchMap = this.patcher.getnamed("bancoDeVocesMenu");
+		post("\nSecuencias en el banco "+bancoDeSecuencias.length);
 		//pitchMap.message("append seq"+(indx));
 	}catch (e) {}
 }
@@ -149,14 +164,53 @@ function getSecuencia(indx){
 
 //- - - - - Transmutaciones - - - - - //
 function transmutaTonos(secNumA,secNumB){ //se le aplican tonos de sec2 a sec1
-	elObjeto.seqNotas =	bancoDeSecuencias[secNumB].seqNotas.slice(0);
+	post("Transmutando tonos")
+	var auxNotas = [];
+
+	for(var i = 0; i < bancoDeSecuencias[secNumA].seqDurs.length; i++){
+
+		//indice de lista de alturas
+		var indx = i%bancoDeSecuencias[secNumB].seqNotas.length ;
+		//copiamos lista de alturas
+		auxNotas[i] = bancoDeSecuencias[secNumB].seqNotas[indx];
+	}
+	
+	//alteramos alturas, mantenemos onsets y duraciones.
+	elObjeto.seqNotas =	auxNotas.slice(0);
 	elObjeto.seqDurs  =	bancoDeSecuencias[secNumA].seqDurs.slice(0);
 	elObjeto.seqOnsets= bancoDeSecuencias[secNumA].seqOnsets.slice(0);
 }
+
 function transmutaDuraciones(secNumA,secNumB){ //se le aplican durs. y ons. de sec2 a sec1
-	elObjeto.seqNotas =	bancoDeSecuencias[secNumA].seqNotas.slice(0);
-	elObjeto.seqDurs  = bancoDeSecuencias[secNumB].seqDurs.slice(0);
-	elObjeto.seqOnsets= bancoDeSecuencias[secNumB].seqOnsets.slice(0);
+	post("Transmutando duraciones")
+	
+	var auxDurs =[];
+	var auxOns = [];
+	var auxNotas = [];
+
+	for(var i = 0; i < bancoDeSecuencias[secNumA].seqNotas.length; i++){
+		//indice de array de duraciones
+		var indx = i%bancoDeSecuencias[secNumB].seqDurs.length ;
+		
+		//copiamos duraciones y mantenemos alturas
+		auxDurs[i] = bancoDeSecuencias[secNumB].seqDurs[indx];
+
+		var indxb = i%bancoDeSecuencias[secNumA].seqNotas.length ;
+		auxNotas[i] = bancoDeSecuencias[secNumA].seqNotas[indxb]; 
+
+		//recalculamos los onsets
+		if(i == 0){
+			auxOns[i] = 0;
+		}else{	
+			auxOns[i] = auxOns[i-1]+auxDurs[i-1];
+		}
+	}
+	post(auxOns.length+" ons ,notas "+ auxNotas.length +" d"+ auxDurs.length)
+
+	//alteramos duraciones y onsets, mantenemos alturas
+	elObjeto.seqNotas = bancoDeSecuencias[secNumA].seqNotas.slice(0);;
+	elObjeto.seqDurs  = auxDurs.slice(0);
+	elObjeto.seqOnsets= auxOns.slice(0);
 } // - - - - - - - - - - - - - - - - //
 
 
@@ -172,10 +226,10 @@ function toBach(){
 	outlet(0,str2);
 }
 
-function array2list(ar){
+function array2list(arreglo){
 	var lista = "";
-	for (var x = 0; x < ar.length; x++){
-		lista += " " + ar[x];}
+	for (var x = 0; x < arreglo.length; x++){
+		lista += " " + arreglo[x];}
 	return lista;
 }
 
@@ -202,8 +256,11 @@ function guardarSeqEnBancoYSelect(){
 	setSeqListaEventos(listIn);
 	guardarSecuencia(contadorDeSeq++);
 
+}
 
-	//guardarSeqEnBanco(contadorDeSeq++); //asuar.js
+function borrarBanco(){
+	post("Borrando banco");
+	bancoDeSecuencias = []
 }
 
 function cargarSeqDesdeBanco(){
@@ -220,14 +277,29 @@ function cargarArchivoAlBanco(arregloDeTxts){
 	contadorDeSeq = 0;
 
 	$('#bancoDeSeq').empty();
-    
-	//$("#bancoDeSeq option[value='X']").remove();
-	//habría q borrar las opciones del select
-	//bancoDeSecuencias = [];
+
 	for(var i = 0; i > arregloDeTxts.length;i++){
 		$("#textoDeEntrada").val( arregloDeTxts[i] );
 		console.log(arregloDeTxts[i] );
 		guardarSeqEnBancoYSelect();
 	}
+}
+
+function guardarBanco(){
+
+	for(var i = 0; i < bancoDeSecuencias.length; i++){
+		//var ls = new Secuencia();
+		var ls = bancoDeSecuencias[i];//.getAllValuesAsArrayOfArrays();
+		
+		outlet(0,"toFile seqIndex "+bancoDeSecuencias[i].getSeqIndex());
+		outlet(0,"toFile seqName "+bancoDeSecuencias[i].seqName );
+		outlet(0,"toFile seqStringIn "+bancoDeSecuencias[i].getStringIn());
+		outlet(0,"toFile seqListaEventos "+bancoDeSecuencias[i].getListaEventos());
+		outlet(0,"toFile seqNotas "+bancoDeSecuencias[i].getSeqNotas());
+		outlet(0,"toFile seqDurs "+bancoDeSecuencias[i].getSeqDurs());
+		outlet(0,"toFile seqOns "+bancoDeSecuencias[i].getSeqOns());
+
+	}
+
 }
 

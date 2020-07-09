@@ -252,6 +252,8 @@ function convertir( lista ){ //para probar el reconocimiento de modos J
 	
 	//luego, se calculan los onsets a partir de los ms.
 	calcularOnsetsDesdeMs();
+
+	//filtrarSilencios();
 }
 
 function asuar2MidiNote (cod){
@@ -269,11 +271,16 @@ function asuar2MidiNote (cod){
 	var calcularNota = 0;
 		
 	if( cantidadDeChars == 1){ 		//si hay 1char (nota)
-		calcularNota = notas[ cod[0] ]+ultimaOct;
+		
+		if(cod[0].indexOf('R') > -1){ //verifica si el caracter es R de silencio
+			calcularNota = -100;
+		}else{
+			calcularNota = notas[ cod[0] ]+ultimaOct;}
 		
 	}else if(cantidadDeChars == 2){ //si hay 2chars, 2casos:
 		
 		if(indicaOct){ 				//1º: oct+nota
+
 			calcularNota = octava+notas[cod[1]];
 			ultimaOct = octava;
 		}else if(!indicaOct){ 		//2º: nota+alt
@@ -329,7 +336,16 @@ function bachPitches(){
 	var listaBachAlturas = "( ";
 	
 	for(var k = 0; k < seqNotas.length; k++){
-		listaBachAlturas += seqMidinotes[k]+" ";}
+		var midi = "";
+		if(parseFloat(seqMidinotes[k]) > 0){
+			midi = seqMidinotes[k];
+		}else{
+			//post("sendig r \n") 
+			//ES UN SILENCIO ENTONCES EL MIDINOTE = -1
+			midi = "-1";
+		}
+		listaBachAlturas += midi+" ";
+	}
 		
 	listaBachAlturas += ")";
 
@@ -446,6 +462,47 @@ function invertir(ejeMidi){
 	}	
 }
 
+function reordenarAlturas(){
+	
+	desordenarArray(seqMidinotes);
+}
+
+function reordenarDuraciones(){
+	desordenarArray(seqMs);
+	calcularOnsetsDesdeMs();
+}
+	
+function desplazarDur(indx){
+	var seqDurAux = [];
+	for(var i = 0; i < seqMs.length;i++){
+		index = (i+indx)%seqMs.length;
+		post(index);
+		seqDurAux[i] = seqMs[index];
+	}
+	post("\n");
+	for(var a = 0; a < seqMs.length; a++){
+		seqMs[a] = seqDurAux[a];
+	}
+	
+ 	calcularOnsetsDesdeMs();
+
+}
+
+function desplazarAlturas(indx){
+	var seqMidinotesAux = [];
+	for(var i = 0; i < seqMidinotes.length;i++){
+		index = (i+indx)%seqMidinotes.length;
+		post(seqMidinotes[index]);
+		seqMidinotesAux[i] = seqMidinotes[index];
+	}
+		post("\n midinotes");
+	for(var a = 0; a < seqMidinotes.length; a++){
+		post(seqMidinotesAux[a]);
+		seqMidinotes[a] = seqMidinotesAux[a];
+	}
+
+}
+
 //Restablecer secuencia original
 function restaurar(){
 	convertir(listIn);
@@ -463,6 +520,8 @@ function reproducir(indx){
 function guardarSeqEnBanco(ix){ 
 //	var s = "TO-BancoDeSeq setSeqO "+array2list(seqOnsets)+", setSeqN "+array2list(seqMidinotes)+", setSeqD "+array2list(seqMs);
 	try{
+		outlet(0,"TO-BancoDeSeq setSeqSI "+array2list(stringIn));
+		outlet(0,"TO-BancoDeSeq setSeqListaEventos "+array2list(listIn));
 		outlet(0,"TO-BancoDeSeq setSeqO "+array2list(seqOnsets));
 		outlet(0,"TO-BancoDeSeq setSeqN "+array2list(seqMidinotes));
 		outlet(0,"TO-BancoDeSeq setSeqD "+array2list(seqMs));
@@ -479,6 +538,15 @@ function guardarSeqEnBanco(ix){
 		setSeqListaEventos(listIn);
 		guardarSecuencia(ix);
 	}catch(err){ }
+
+}
+
+function toBach(){
+	bachDurs(); bachPitches(); bachOnsets();
+	//var roll = this.patcher.getnamed("comdasuar-bachroll");
+ 	messnamed("comdasuar-bachroll","bang");
+
+	//roll.message("bang");
 
 }
 
@@ -503,6 +571,42 @@ function getSeqMidiNote (indx){	outlet(0,"midinote "  + Math.round( seqMidinotes
 function getSeqMs (indx){		outlet(0,"duracionms "+ Math.round( seqMs[indx]) );}
 function getSeqOnsets (indx){	outlet(0,"onset "+ Math.round( seqOnsets[indx]) );}
 function isEmpty(str) {			return (!str || 0 === str.length);}
+function getDur(){				return post(array2list(seqMs));}
+function getNotas(){   			return post(array2list(seqMidinotes));}
+
+function desordenarArray(ar){
+	ar.sort(function (){
+		return 0.5-Math.random();
+	})
+}	
+
+function filtrarSilencios(){
+	var auxNotas = [];
+	var auxOns = [];
+	var auxDurs = [];
+
+	var contadorAux = 0;
+	post("\n Largo inicial "+seqMs.length);
+
+	for(var i = 0; i < seqMs.length; i++){
+		if (seqMidinotes[i] <= 0 ){
+
+		}else{
+
+			auxNotas[contadorAux] = seqMidinotes[i];
+			auxOns[contadorAux] = seqOnsets[i];
+			auxDurs[contadorAux] = seqMs[i];
+
+			contadorAux++;
+		}
+	}
+
+	for(var i = 0; i< seqMs.length; i++){
+		seqMidinotes[i] = auxNotas[i];
+		seqOnsets[i] = auxOns[i];
+		seqMs[i] =auxDurs[i];
+	}
+	post(" Largo final "+seqMs.length+"\n");
 
 
-	
+}	
