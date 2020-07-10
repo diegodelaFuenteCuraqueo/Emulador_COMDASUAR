@@ -15,7 +15,9 @@ function Secuencia ()  {
 	this.seqName 	= "sequence1";
 	this.seqIndex;
 	this.seqCleff 	= "";
-	
+	this.seqTempo = "";
+	this.seqTimeSig = "";
+
 	this.setSeqName			= function (str){	this.seqName = str;}
 	this.setStringIn		= function (str){	this.stringIn = str;}
 	this.setSeqListaEventos	= function (seqN){	this.listaEventos = seqN.slice(0);}
@@ -66,7 +68,7 @@ function Secuencia ()  {
 		
 	//copiar otra secuencia (todas las listas)
 	this.copiarOtraSeq 		= function(seqIn){
-		this.seqName		= seqIn.getSeqName();
+		this.seqName		= seqIn.seqName;
 		this.stringIn		= seqIn.stringIn;
 		this.seqNotas 		= seqIn.seqNotas.slice(0);
 		this.seqDurs 		= seqIn.seqDurs.slice(0);
@@ -109,10 +111,10 @@ function setSeqD(lst){
 }
 
 function setSeqSI(lst){
- 		var lista = [];
+ 	var lista = [];
 	for (var x = 0; x < arguments.length; x++){
 		lista[x] = arguments[x];}
-	elObjeto.setSeqSI(lista);
+	elObjeto.setStringIn(array2list(lista));
 	try { post(arguments.length); }catch(e){}
 }
 
@@ -163,16 +165,30 @@ function getSecuencia(indx){
 }
 
 //- - - - - Transmutaciones - - - - - //
-function transmutaTonos(secNumA,secNumB){ //se le aplican tonos de sec2 a sec1
+function transmutaTonos(secNumA,secNumB){ //se le aplican tonos de secB a secA
 	post("Transmutando tonos")
 	var auxNotas = [];
 
+	//copiamos lista de alturas B y eliminamos silencios
+	var seqNotasSinSilencios = [];
+	seqNotasSinSilencios =  quitarSilencios(bancoDeSecuencias[secNumB].seqNotas);
+
+	var contadorB = 0;
 	for(var i = 0; i < bancoDeSecuencias[secNumA].seqDurs.length; i++){
 
-		//indice de lista de alturas
-		var indx = i%bancoDeSecuencias[secNumB].seqNotas.length ;
+		var notaTransferida;
+
+		//si en seqA hay un silencio entonces se respeta
+		if(bancoDeSecuencias[secNumA].seqNotas[i] < 1){ 
+			notaTransferida = bancoDeSecuencias[secNumA].seqNotas[i];
+
+		}else{//si no hay un silencio entonces se toma la altura B
+			//indice de lista de alturas
+			var indx = contadorB++%seqNotasSinSilencios.length ;
+			notaTransferida = seqNotasSinSilencios[indx];
+		}
 		//copiamos lista de alturas
-		auxNotas[i] = bancoDeSecuencias[secNumB].seqNotas[indx];
+		auxNotas[i] = notaTransferida;
 	}
 	
 	//alteramos alturas, mantenemos onsets y duraciones.
@@ -233,6 +249,18 @@ function array2list(arreglo){
 	return lista;
 }
 
+function quitarSilencios(noteSeqConSilencios){
+	var noteSeqSinSilencios = [];
+	for(var i = 0; i < noteSeqConSilencios.length; i ++){
+		if(noteSeqConSilencios[i] > 0){
+			noteSeqSinSilencios.push(noteSeqConSilencios[i]);
+		}else{
+			post("ignorando silencio en "+i+"\n");
+			continue;
+		}
+	}
+	return noteSeqSinSilencios;
+}
 
 //html selector
 
@@ -303,3 +331,73 @@ function guardarBanco(){
 
 }
 
+var myJSON;
+function saveFile(){
+	myJSON = JSON.stringify(bancoDeSecuencias);
+	this.patcher.
+	messnamed("textObject",myJSON);
+
+	post( myJSON);
+}
+
+function writefile(s)
+{
+	var f = new File(s,"write","TEXT"); 
+
+	//convierte el banco en un archivo JSON
+	myJSON = JSON.stringify(bancoDeSecuencias);
+	if (f.isopen) {
+		post("Guardando Banco Asuar : " + myJSON + "\n");
+		f.writestring(myJSON); //writes a string
+		f.close();
+	} else {
+		post("could not create file: " + s + "\n");
+	}
+}
+
+
+function readfile(s)
+{
+	var f = new File(s);
+	var i,a,c;
+	var StringInFromTxt = "";
+
+	if (f.isopen) {
+
+		c = f.eof;
+
+		//crea String con contenidos del archivo txt
+		for (i=0;i<c;i++) {
+			StringInFromTxt += f.readchars(1);			
+		}
+
+		//post(StringInFromTxt);
+		//creamos arreglo con objetos cargados desde JSON obj
+		var JSONSEQS = [];
+		JSONSEQS = JSON.parse(StringInFromTxt);
+
+		post(JSONSEQS.length+" es el largo \n");
+		
+		//borramos banco
+		borrarBanco();
+
+		//copiamos objectos desde JSON al banco, uno por uno
+		for(var s = 0; s < JSONSEQS.length; s++){
+
+			bancoDeSecuencias[s] = new Secuencia();
+			bancoDeSecuencias[s].copiarOtraSeq(JSONSEQS[s]);
+
+			//actualizamos los valores del umenu de la interfaz.
+			outlet (0,"toUmenu append seq"+s);
+		}
+		
+		try{
+			var pitchMap = this.patcher.getnamed("bancoDeVocesMenu");
+			post("\nCargando archivo al banco. Secuencias cargadas: "+bancoDeSecuencias.length);
+			//pitchMap.message("append seq"+(indx));
+		}catch (e) {}
+		f.close();
+	} else {
+		post("could not open file: " + s + "\n");
+	}
+}
