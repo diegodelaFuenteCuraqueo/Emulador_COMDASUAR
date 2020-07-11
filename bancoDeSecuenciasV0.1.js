@@ -4,7 +4,7 @@ outlets = 2;
 var bancoDeSecuencias = [];
 var elObjeto  = new Secuencia();;
 
-//- - - - - Objeto Secuencia - - - - - //
+//- - - - - - - - - Objeto Secuencia - - - - - - - - -//
 function Secuencia ()  {
 	this.stringIn = "";
 	this.listaEventos = [];
@@ -14,24 +14,28 @@ function Secuencia ()  {
 	this.seqVel 	= []; 
 	this.seqName 	= "sequence1";
 	this.seqIndex;
-	this.seqCleff 	= "";
-	this.seqTempo = "";
-	this.seqTimeSig = "";
+	this.seqCleff 	= "G";
+	this.seqTempo = "N60";
+	this.seqTimeSig = "4N";
 
+	//setters de parámetros
 	this.setSeqName			= function (str){	this.seqName = str;}
 	this.setStringIn		= function (str){	this.stringIn = str;}
 	this.setSeqListaEventos	= function (seqN){	this.listaEventos = seqN.slice(0);}
 	this.setSeqNotas		= function (seqN){	this.seqNotas = seqN.slice(0);}
 	this.setSeqDurs 		= function (seqN){	this.seqDurs = seqN.slice(0);}
 	this.setSeqOns 			= function (seqN){	this.seqOnsets = seqN.slice(0);}
+	this.setSeqVel 			= function (seqN){	this.seqVel = seqN.slice(0);}
 	this.setSeqIndex		= function (inx){	this.seqIndex = inx;}
 	
+	//getter de elemenos string
 	this.getStringIn		= function (){	return this.stringIn;}
 	this.getSeqName			= function (){	return this.seqName;}
 	this.getSeqIndex		= function (){	return this.seqIndex;}
+
 	//getter de arrays
 	this.getListaEventos= function (){	
-		try{	outlet(0,"notas "+this.listaEventos.length);
+		try{	outlet(0,"Eventos "+this.listaEventos.length);
 		}catch(e){}
 		return this.listaEventos;}
 	this.getSeqNotas	= function (){	
@@ -46,7 +50,10 @@ function Secuencia ()  {
 		try{	outlet(0,"onsets "+this.seqOnsets.length);	
 		}catch(e){}
 		return this.seqOnsets;}
-		
+	this.getSeqVel 		= function (){	
+		try{	outlet(0,"vels "+this.seqVel.length);	
+		}catch(e){}
+		return this.seqVel;}
 	
 	//Getters por indice de array
 	this.getEvento		= function (inx){
@@ -75,16 +82,13 @@ function Secuencia ()  {
 		this.seqOnsets 		= seqIn.seqOnsets.slice(0);
 		this.listaEventos 	= seqIn.listaEventos.slice(0);
 	}
-}//- - - - - - - - - - - - - - - - - //
-
-
-function setSeqName(n){
-	elObjeto.setSeqName(n);
 }
+//- - - - - - - - - - - - - - - - - - - - - - - //
 
-function setStringIn(s){
-	elObjeto.setStringIn(arrayfromargs(s));
-}
+//Setters de El objeto (secuencia actual) 
+//Acá llegan los datos desde el compilador asuar
+function setSeqName(n){		elObjeto.setSeqName(n);}
+function setStringIn(s){	elObjeto.setStringIn(arrayfromargs(s));}
 
 function setSeqListaEventos(lst){
 	var lista = [];
@@ -93,7 +97,6 @@ function setSeqListaEventos(lst){
 	elObjeto.setSeqListaEventos(lista);
 	try{ post("\n Tamaño lista "+arguments.length); }catch(e){}
 }
-
 function setSeqN(lst){
 	var lista = [];
 	for (var x = 0; x < arguments.length; x++){
@@ -101,7 +104,6 @@ function setSeqN(lst){
 	elObjeto.setSeqNotas(lista);
 	try { post(arguments.length); }catch(e){}
 }
-
 function setSeqD(lst){
 	var lista = [];
 	for (var x = 0; x < arguments.length; x++){
@@ -109,15 +111,13 @@ function setSeqD(lst){
 	elObjeto.setSeqDurs(lista);
 	try { post(arguments.length); }catch(e){}
 }
-
 function setSeqSI(lst){
  	var lista = [];
 	for (var x = 0; x < arguments.length; x++){
 		lista[x] = arguments[x];}
-	elObjeto.setStringIn(array2list(lista));
+	elObjeto.setStringIn( array2list(lista) );
 	try { post(arguments.length); }catch(e){}
 }
-
 function setSeqO(lst){	
 	var lista = [];
 	for (var x = 0; x < arguments.length; x++){
@@ -126,15 +126,27 @@ function setSeqO(lst){
 	try { post(arguments.length); }catch(e){}
 }
 
+//Getters de el objeto
 function getSeqName(){	elObjeto.getSeqName();}
 function getSeqN(){		elObjeto.getSeqNotas();}
 function getSeqD(){		elObjeto.getSeqDurs();}
 function getSeqO(){		elObjeto.getSeqOns();}
-
+function getStringIn(){	elObjeto.getStringIn()}
+function getListaEventos(){ elObjeto.getListaEventos();}
+//geters de evento individual de cada lista (del objeto)
 function getN(ic){		elObjeto.getNota(ic);}
 function getD(ic){		elObjeto.getDur(ic);}
 function getO(ic){		elObjeto.getOns(ic);}
 
+//Getters + print datos del banco
+function printSeqName(i){ post("\nNombre: "+bancoDeSecuencias[i].getSeqName() );}
+function printStringIn(i){post("\nStringIn: "+bancoDeSecuencias[i].getStringIn());}
+function printSeqNote(i){ post("\nNotas: "+bancoDeSecuencias[i].getSeqNotas() );}
+function printSeqDur(i){ post("\nDuraciones: "+bancoDeSecuencias[i].getSeqDurs() );}
+function printSeqOns(i){ post("\nInicios: "+bancoDeSecuencias[i].getSeqOns() );}
+function printSeqIndx(i){ post("\nÍndice: "+bancoDeSecuencias[i].getSeqIndex() );}
+
+//copia el estado actual del objeto en el banco como secuencia.
 function guardarSecuencia(indx){
 	bancoDeSecuencias[indx] = new Secuencia;
 	bancoDeSecuencias[indx].copiarOtraSeq(elObjeto);
@@ -149,6 +161,7 @@ function guardarSecuencia(indx){
 	}catch (e) {}
 }
 
+//muestra secuencia en el bach.roll del banco
 function getSecuencia(indx){
 	try{
 		var o = array2list(bancoDeSecuencias[indx].seqOnsets);
@@ -313,6 +326,7 @@ function cargarArchivoAlBanco(arregloDeTxts){
 	}
 }
 
+/*
 function guardarBanco(){
 
 	for(var i = 0; i < bancoDeSecuencias.length; i++){
@@ -330,8 +344,11 @@ function guardarBanco(){
 	}
 
 }
+*/
 
+/*
 var myJSON;
+
 function saveFile(){
 	myJSON = JSON.stringify(bancoDeSecuencias);
 	this.patcher.
@@ -354,7 +371,7 @@ function writefile(s)
 		post("could not create file: " + s + "\n");
 	}
 }
-
+*/
 
 function readfile(s)
 {

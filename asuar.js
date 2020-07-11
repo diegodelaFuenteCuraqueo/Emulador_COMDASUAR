@@ -208,16 +208,45 @@ function convertir( lista ){ //para probar el reconocimiento de modos J
 			seqsIndex++;
 			
 		} else if (JMODO_ACTIVO == 0 ){
-			
+			/* así era antes, pero aora le puse detector / 1313
 			seqNotas[seqsIndex] = evento;
 			seqDuraciones[seqsIndex] = lista[i+1]//;.replace(/\s+/g,' '); //esto tiraba error en web
-			
 			//post("j0 "+seqNotas[seqsIndex]+" "+seqDuraciones[seqsIndex] );
 			i++;
 			seqMidinotes[seqsIndex] = asuar2MidiNote(seqNotas[seqsIndex]);
 			seqMs[seqsIndex] = asuar2Ritmo(seqDuraciones[seqsIndex]);
 			
 			seqsIndex++;
+			*/
+
+			// falta probar esto de los / para repetir nota o dur
+
+			seqNotas[seqsIndex] = evento;
+			seqDuraciones[seqsIndex] = lista[i+1]//;.replace(/\s+/g,' '); //esto tiraba error en web
+
+			var nota, ritmo;
+			if(evento.indexOf("/") > -1){ //puso / en lugar de una nota así q se repite
+				//post("detectado nota /");
+				nota = seqMidinotes[seqsIndex-1];
+				seqNotas[seqsIndex] = nota;
+			}else{ 
+				nota =asuar2MidiNote(evento);
+			}
+
+			if(lista[i+1].indexOf("/") > -1){  //puso / en lugar de duración asiq se repite
+				ritmo = seqMs[seqsIndex-1];
+				//post("detectado  ritmo /");
+				seqMs[seqsIndex] = ritmo;
+			}else{
+				ritmo = asuar2Ritmo(lista[i+1]);
+			}
+
+			i++;
+			seqMidinotes[seqsIndex] = nota;
+			seqMs[seqsIndex] = ritmo;
+			
+			seqsIndex++;
+			//*/
 			 
 		} else if (JMODO_ACTIVO == 1 ){ // J1_ACTIVE == true){ //DUR CONST.	- - - - - - - - - - - - - - - - - - - - - - -
 			
@@ -396,6 +425,7 @@ function textoDeEntrada2ListaDeEventos ( txtIn){
 
 function quitarEspRep(string){
 	var out = string.replace(/\s+/g,' ');
+	//out = out.replace(/(\r\n|\n|\r)/gm, "");
 	if(out[out.length-1] == " "){
 		out = out.substring(0, out.length - 1);}
 	return out;
@@ -520,23 +550,27 @@ function reproducir(indx){
 function guardarSeqEnBanco(ix){ 
 //	var s = "TO-BancoDeSeq setSeqO "+array2list(seqOnsets)+", setSeqN "+array2list(seqMidinotes)+", setSeqD "+array2list(seqMs);
 	try{
-		outlet(0,"TO-BancoDeSeq setSeqSI "+array2list(stringIn));
+		outlet(0,"TO-BancoDeSeq setSeqSI '"+ stringIn+"'" );
+		post(" stringIn = "+ stringIn );
 		outlet(0,"TO-BancoDeSeq setSeqListaEventos "+array2list(listIn));
 		outlet(0,"TO-BancoDeSeq setSeqO "+array2list(seqOnsets));
 		outlet(0,"TO-BancoDeSeq setSeqN "+array2list(seqMidinotes));
 		outlet(0,"TO-BancoDeSeq setSeqD "+array2list(seqMs));
 		outlet(0,"TO-BancoDeSeq setSeqName Seq"+ix);
-		
+		outlet(0,"TO-BancoDeSeq setIndex "+ix)
+
 		outlet(0,"guardarSecuencia "+ix);
 	}catch(e){}
 
 	try{ //funciones en bancoDeSeqs..js
+		/*
 		setSeqO(seqOnsets);
 		setSeqN(seqMidinotes);
 		setSeqD(seqMs);
 		setSeqSI(stringIn);
 		setSeqListaEventos(listIn);
 		guardarSecuencia(ix);
+		*/
 	}catch(err){ }
 
 }
@@ -556,13 +590,7 @@ function array2list(ar){
 		lista += " " + ar[x];}
 	return lista;
 }
-
-function bang(){
-	var d = new Date();
-	var n = d.getMinutes();
-	post(n);
-}
-
+ 
 // - FUNCIONES GETTER -
 function verNota( n){ 			outlet(0,"nota "+listIn[n]);}
 function getSeqNotas (indx){	outlet(0,"altura "    + seqNotas[indx]);}
@@ -570,6 +598,7 @@ function getSeqDur (indx){		outlet(0,"duracion "  + seqDuraciones[indx] );}
 function getSeqMidiNote (indx){	outlet(0,"midinote "  + Math.round( seqMidinotes[indx]) );}
 function getSeqMs (indx){		outlet(0,"duracionms "+ Math.round( seqMs[indx]) );}
 function getSeqOnsets (indx){	outlet(0,"onset "+ Math.round( seqOnsets[indx]) );}
+function getStringIN (){		outlet(0,stringIn); post ( stringIn )}
 function isEmpty(str) {			return (!str || 0 === str.length);}
 function getDur(){				return post(array2list(seqMs));}
 function getNotas(){   			return post(array2list(seqMidinotes));}
