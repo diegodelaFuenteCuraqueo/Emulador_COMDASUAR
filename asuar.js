@@ -52,7 +52,7 @@ var J4indxDesde = 0;
 var J4indxHasta = 0;
 var J4alt = [];
 var J4dur = [];
-
+var bpm;
 var ultimaOct = 4, ultimaNota, ultimaAlt, ultimaSub, ultimaDur, ultimoRit, tempo = 1.;
 		
 function cargarPartitura(lst){
@@ -182,7 +182,13 @@ function convertir( lista ){ //para probar el reconocimiento de modos J
 				continue;
 			}
 
-		}  
+		}else if(evento.indexOf('=') > -1){ //SI NO SON CAMBIOS DE MODO PUEDE SER INDICACION DE TEMPO
+			bpm = parseFloat(evento.slice( evento.indexOf('=')+1 )) ;
+			tempo = 60000 / bpm ;
+			cambiarTempo(bpm);
+			continue;
+		}
+
 		
 		//SI EL EVENTO NO PARTE CON J ENTONCES ES UN SONIDO: - - - - - - - - - - - - - - - - - - 
 		//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -460,6 +466,19 @@ function setTempo (tmp){
 
 }
 
+function cambiarTempo(tmp){
+	tempo = (60000/tmp);
+	
+	ritmos.L = tempo*8;
+	ritmos.R = tempo*4;
+	ritmos.B = tempo*2
+	ritmos.N = tempo;
+	ritmos.C = tempo*.5;
+	ritmos.S = tempo*.25;
+	ritmos.F = tempo/8;
+	ritmos.M = tempo/16;
+}
+
 function isInArray(value, array) {
   return array.indexOf(value) > -1;
 }
@@ -556,8 +575,14 @@ function guardarSeqEnBanco(ix){
 		outlet(0,"TO-BancoDeSeq setSeqO "+array2list(seqOnsets));
 		outlet(0,"TO-BancoDeSeq setSeqN "+array2list(seqMidinotes));
 		outlet(0,"TO-BancoDeSeq setSeqD "+array2list(seqMs));
+
+		outlet(0,"TO-BancoDeSeq setSeqTempo "+bpm);
+
+		outlet(0,"TO-BancoDeSeq setSeqAsuarNota "+array2list(seqNotas));
+		outlet(0,"TO-BancoDeSeq setSeqAsuarDur "+array2list(seqDuraciones));
+
 		outlet(0,"TO-BancoDeSeq setSeqName Seq"+ix);
-		outlet(0,"TO-BancoDeSeq setIndex "+ix)
+		//outlet(0,"TO-BancoDeSeq setIndex "+ix)
 
 		outlet(0,"guardarSecuencia "+ix);
 	}catch(e){}

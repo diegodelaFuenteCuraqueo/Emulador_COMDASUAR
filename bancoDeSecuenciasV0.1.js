@@ -1,91 +1,17 @@
 autowatch = 1;
 outlets = 2;
 
+include("generadorProbabilistico.js"); 
+include("diccionarioAsuar.js");
+var dicc  = new codigoAsuar();
+include("Secuencia.js");
+//var dado = new dadoMusical();
+
 var bancoDeSecuencias = [];
-var elObjeto  = new Secuencia();;
-
-//- - - - - - - - - Objeto Secuencia - - - - - - - - -//
-function Secuencia ()  {
-	this.stringIn = "";
-	this.listaEventos = [];
-	this.seqNotas 	= [];
-	this.seqDurs 	= [];
-	this.seqOnsets 	= [];
-	this.seqVel 	= []; 
-	this.seqName 	= "sequence1";
-	this.seqIndex;
-	this.seqCleff 	= "G";
-	this.seqTempo = "N60";
-	this.seqTimeSig = "4N";
-
-	//setters de parámetros
-	this.setSeqName			= function (str){	this.seqName = str;}
-	this.setStringIn		= function (str){	this.stringIn = str;}
-	this.setSeqListaEventos	= function (seqN){	this.listaEventos = seqN.slice(0);}
-	this.setSeqNotas		= function (seqN){	this.seqNotas = seqN.slice(0);}
-	this.setSeqDurs 		= function (seqN){	this.seqDurs = seqN.slice(0);}
-	this.setSeqOns 			= function (seqN){	this.seqOnsets = seqN.slice(0);}
-	this.setSeqVel 			= function (seqN){	this.seqVel = seqN.slice(0);}
-	this.setSeqIndex		= function (inx){	this.seqIndex = inx;}
-	
-	//getter de elemenos string
-	this.getStringIn		= function (){	return this.stringIn;}
-	this.getSeqName			= function (){	return this.seqName;}
-	this.getSeqIndex		= function (){	return this.seqIndex;}
-
-	//getter de arrays
-	this.getListaEventos= function (){	
-		try{	outlet(0,"Eventos "+this.listaEventos.length);
-		}catch(e){}
-		return this.listaEventos;}
-	this.getSeqNotas	= function (){	
-		try{	outlet(0,"notas "+this.seqNotas.length); 	
-		}catch(e){}
-		return this.seqNotas;}
-	this.getSeqDurs 	= function (){	
-		try{	outlet(0,"durs "+this.seqDurs.length);		
-		}catch(e){}
-		return this.seqDurs;}		
-	this.getSeqOns 		= function (){	
-		try{	outlet(0,"onsets "+this.seqOnsets.length);	
-		}catch(e){}
-		return this.seqOnsets;}
-	this.getSeqVel 		= function (){	
-		try{	outlet(0,"vels "+this.seqVel.length);	
-		}catch(e){}
-		return this.seqVel;}
-	
-	//Getters por indice de array
-	this.getEvento		= function (inx){
-		try{	outlet(0,this.listaEventos[inx]);	
-		}catch(e){}
-		return this.listaEventos[inx];}
-	this.getNota 		= function (inx){
-		try{	outlet(0,this.seqNotas[inx]);		
-		}catch(e){}
-		return this.seqNotas[inx];}
-	this.getDur 		= function (inx){
-		try{	outlet(0,this.seqDurs[inx]);		
-		}catch(e){}
-		return this.seqDurs[inx];}
-	this.getOn 			= function (inx){
-		try{	outlet(0,this.seqOns[inx]);			
-		}catch(e){}
-		return this.seqOns[inx];}
-		
-	//copiar otra secuencia (todas las listas)
-	this.copiarOtraSeq 		= function(seqIn){
-		this.seqName		= seqIn.seqName;
-		this.stringIn		= seqIn.stringIn;
-		this.seqNotas 		= seqIn.seqNotas.slice(0);
-		this.seqDurs 		= seqIn.seqDurs.slice(0);
-		this.seqOnsets 		= seqIn.seqOnsets.slice(0);
-		this.listaEventos 	= seqIn.listaEventos.slice(0);
-	}
-}
-//- - - - - - - - - - - - - - - - - - - - - - - //
-
+var elObjeto  = new Secuencia();
+var indxSeqActual;
 //Setters de El objeto (secuencia actual) 
+
 //Acá llegan los datos desde el compilador asuar
 function setSeqName(n){		elObjeto.setSeqName(n);}
 function setStringIn(s){	elObjeto.setStringIn(arrayfromargs(s));}
@@ -118,19 +44,73 @@ function setSeqSI(lst){
 	elObjeto.setStringIn( array2list(lista) );
 	try { post(arguments.length); }catch(e){}
 }
+function setSeqTempo(t){
+   elObjeto.setTempo( t );
+}
+
 function setSeqO(lst){	
 	var lista = [];
 	for (var x = 0; x < arguments.length; x++){
 		lista[x] = arguments[x];}
 	elObjeto.setSeqOns(lista);
-	try { post(arguments.length); }catch(e){}
+	try { post(lista.length+"-"+elObjeto.getSeqOns.length+" ons\n"); }catch(e){}
 }
+function setSeqAsuarNota(lst){	
+	var lista = [];
+	for (var x = 0; x < arguments.length; x++){
+		lista[x] = arguments[x];}
+	elObjeto.seqAsuarNota = lista.slice(0);
+	try { post(lista.length+"-"+elObjeto.getSeqNotas.length+" notas\n"); }catch(e){}
+}
+function setSeqAsuarDur(lst){	
+	var lista = [];
+	for (var x = 0; x < arguments.length; x++){
+		lista[x] = arguments[x];}
+	elObjeto.seqAsuarDur = lista.slice(0);
+	try { post(lista.length+"-"+elObjeto.getSeqDurs.length+" durs\n"); }catch(e){}
+}
+
+function setNumElem(indx,n){
+	bancoDeSecuencias[indx].setNumDeElementos(n);
+}
+
+function setGenProbs(lst){	
+	var lista = [];
+	for (var x = 2; x < arguments.length; x++){
+		lista[x-2] = arguments[x];}
+	try { post(arguments.length); }catch(e){}
+	//indice en banco, parametro, lista.... 
+	bancoDeSecuencias[arguments[0]].setGenProbs(arguments[1], lista);
+	//EJ setGenProbs 0 RIT 500 250 125
+}
+function setGenOps(lst){	
+	var lista = [];
+	for (var x = 2; x < arguments.length; x++){ 
+		lista[x-2] = arguments[x];}
+	try { post(arguments.length); }catch(e){}
+	//indice en banco, parametro, lista.... 
+	bancoDeSecuencias[arguments[0]].setGenOps(arguments[1], lista);
+	//EJ setGenOps 0 RIT 50 30 20
+}
+
+function calcularProbs (indx){
+	bancoDeSecuencias[indx].calcularProbabilidades();
+}
+
+function insertarSeqGen(indx){
+	bancoDeSecuencias[indx].insertarSeqGen("ALT");
+}
+
+
 
 //Getters de el objeto
 function getSeqName(){	elObjeto.getSeqName();}
 function getSeqN(){		elObjeto.getSeqNotas();}
 function getSeqD(){		elObjeto.getSeqDurs();}
 function getSeqO(){		elObjeto.getSeqOns();}
+function getSeqAsuarDur(){ post(array2list(elObjeto.seqAsuarDur));}
+function getSeqAsuarNota(){ post(array2list(elObjeto.seqAsuarNota));}
+
 function getStringIn(){	elObjeto.getStringIn()}
 function getListaEventos(){ elObjeto.getListaEventos();}
 //geters de evento individual de cada lista (del objeto)
@@ -145,6 +125,62 @@ function printSeqNote(i){ post("\nNotas: "+bancoDeSecuencias[i].getSeqNotas() );
 function printSeqDur(i){ post("\nDuraciones: "+bancoDeSecuencias[i].getSeqDurs() );}
 function printSeqOns(i){ post("\nInicios: "+bancoDeSecuencias[i].getSeqOns() );}
 function printSeqIndx(i){ post("\nÍndice: "+bancoDeSecuencias[i].getSeqIndex() );}
+
+function printGenOps(i){ 
+	post("\nReg: "+bancoDeSecuencias[i].generadorDeSeq.REG.opciones );
+	post("\nAlt: "+bancoDeSecuencias[i].generadorDeSeq.ALT.opciones );
+	post("\nDUR: "+bancoDeSecuencias[i].generadorDeSeq.DUR.opciones );
+	post("\nARM: "+bancoDeSecuencias[i].generadorDeSeq.ARM.opciones );
+	post("\nTEX: "+bancoDeSecuencias[i].generadorDeSeq.TEX.opciones );
+}
+
+function printGenProb(i){
+	post("\nReg: "+bancoDeSecuencias[i].generadorDeSeq.REG.probabilidades );
+	post("\nAlt: "+bancoDeSecuencias[i].generadorDeSeq.ALT.probabilidades );
+	post("\nDUR: "+bancoDeSecuencias[i].generadorDeSeq.DUR.probabilidades );
+	post("\nARM: "+bancoDeSecuencias[i].generadorDeSeq.ARM.probabilidades );
+	post("\nTEX: "+bancoDeSecuencias[i].generadorDeSeq.TEX.probabilidades );
+}
+
+function genProb2CellBlocks(){
+	for(var x = 0; x < bancoDeSecuencias[indxSeqActual].generadorDeSeq.ALT.opciones.length; x++){
+		var op = bancoDeSecuencias[indxSeqActual].generadorDeSeq.ALT.opciones[x];
+		var prob = bancoDeSecuencias[indxSeqActual].generadorDeSeq.ALT.probabilidades[x];
+		outlet(0,"toCells ALT setCell "+0+" "+x+" "+op);
+		outlet(0,"toCells ALT setCell "+1+" "+x+" "+prob);
+	}
+	for(var x = 0; x < bancoDeSecuencias[indxSeqActual].generadorDeSeq.DUR.opciones.length; x++){
+		var op = bancoDeSecuencias[indxSeqActual].generadorDeSeq.DUR.opciones[x];
+		var prob = bancoDeSecuencias[indxSeqActual].generadorDeSeq.DUR.probabilidades[x];
+		outlet(0,"toCells DUR setCell "+0+" "+x+" "+op);
+		outlet(0,"toCells DUR setCell "+1+" "+x+" "+prob);
+	}
+	for(var x = 0; x < bancoDeSecuencias[indxSeqActual].generadorDeSeq.REG.opciones.length; x++){
+		var op = bancoDeSecuencias[indxSeqActual].generadorDeSeq.REG.opciones[x];
+		var prob = bancoDeSecuencias[indxSeqActual].generadorDeSeq.REG.probabilidades[x];
+		outlet(0,"toCells REG setCell "+0+" "+x+" "+op);
+		outlet(0,"toCells REG setCell "+1+" "+x+" "+prob);
+	}
+	for(var x = 0; x < bancoDeSecuencias[indxSeqActual].generadorDeSeq.ARM.opciones.length; x++){
+		var op = bancoDeSecuencias[indxSeqActual].generadorDeSeq.ARM.opciones[x];
+		var prob = bancoDeSecuencias[indxSeqActual].generadorDeSeq.ARM.probabilidades[x];
+		outlet(0,"toCells ARM setCell "+0+" "+x+" "+op);
+		outlet(0,"toCells ARM setCell "+1+" "+x+" "+prob);
+	}
+	for(var x = 0; x < bancoDeSecuencias[indxSeqActual].generadorDeSeq.TEX.opciones.length; x++){
+		var op = bancoDeSecuencias[indxSeqActual].generadorDeSeq.TEX.opciones[x];
+		var prob = bancoDeSecuencias[indxSeqActual].generadorDeSeq.TEX.probabilidades[x];
+		outlet(0,"toCells TEX setCell "+0+" "+x+" "+op);
+		outlet(0,"toCells TEX setCell "+1+" "+x+" "+prob);
+	}
+}
+
+function aplicarProbabilidades(param){
+	//bancoDeSecuencias[indxSeqActual].setNumDeElementos(numElems);
+	bancoDeSecuencias[indxSeqActual].calcularProbabilidades();
+	bancoDeSecuencias[indxSeqActual].insertarSeqGen(param);
+	getSecuencia(indxSeqActual);
+}
 
 //copia el estado actual del objeto en el banco como secuencia.
 function guardarSecuencia(indx){
@@ -161,17 +197,45 @@ function guardarSecuencia(indx){
 	}catch (e) {}
 }
 
+function almacernarSeq(){
+
+	var seq = new Secuencia();
+
+	seq.copiarOtraSeq(elObjeto);
+
+	bancoDeSecuencias.push(seq);
+
+	try{
+		var pitchMap = this.patcher.getnamed("bancoDeVocesMenu");
+		post("\nSecuencias en el banco "+bancoDeSecuencias.length);
+		pitchMap.message(["append", "seq"+indx]);
+	}catch (e) {}
+}
+
 //muestra secuencia en el bach.roll del banco
 function getSecuencia(indx){
 	try{
-		var o = array2list(bancoDeSecuencias[indx].seqOnsets);
-		var p = array2list(bancoDeSecuencias[indx].seqNotas);
-		var d = array2list(bancoDeSecuencias[indx].seqDurs);
-		var str = "bach (("+o+"))"+"(("+p+"))"+"(("+d+"))";
+		//insertamos en elObjeto la secuencia solicitada para modificarla
+		//selectedSeq = new Secuencia();
+		//selectedSeq.copiarOtraSeq(bancoDeSecuencias[indx]);
+
+		indxSeqActual = indx;
+		post("\n"+indx+"\n");
+		
+		var o = bancoDeSecuencias[indx].getBachOnsets();
+		var p = bancoDeSecuencias[indx].getBachNotes();
+		var d = bancoDeSecuencias[indx].getBachDurs();
+		var str = "bach ("+o+")"+"("+p+")"+"("+d+")";
+
 		outlet(0,str);
-		//outlet(0,"bach onset (("+o+"))");
-		//outlet(0,"bach pitch (("+p+"))");
-		//outlet(0,"bach durs (("+d+"))");
+		outlet(0, "bach addmarker 0 "+bancoDeSecuencias[indx].getSeqName());
+
+		//retorna duracion total y tb la envia por la salida 0
+		outlet(0, "bach duracionTotal "+bancoDeSecuencias[indx].getDurTotal() );
+
+		genProb2CellBlocks();
+		//outlet(0,"bach bang");
+
 	}catch (error){
 		post("secuencia vacía");
 	}
@@ -276,7 +340,6 @@ function quitarSilencios(noteSeqConSilencios){
 }
 
 //html selector
-
 var contadorDeSeq = 0;	
 
 function guardarSeqEnBancoYSelect(){ 
@@ -286,7 +349,6 @@ function guardarSeqEnBancoYSelect(){
 	var textoIn = $("#textoDeEntrada").val();} catch (e) {}
 	console.log(textoIn);
 	cargarPartitura(textoIn);
-
 
 	sel.options[sel.options.length] = new Option('seq'+contadorDeSeq,contadorDeSeq);
 	setSeqO(seqOnsets);
@@ -304,6 +366,7 @@ function borrarBanco(){
 	bancoDeSecuencias = []
 }
 
+//html
 function cargarSeqDesdeBanco(){
 	var sel = document.getElementById("bancoDeSeq");
 
@@ -312,6 +375,7 @@ function cargarSeqDesdeBanco(){
 	$("#textoDeEntrada").val( bancoDeSecuencias[seqDelBanco].stringIn );
 }
 
+//html
 function cargarArchivoAlBanco(arregloDeTxts){
 
 	//confirm("esto borrará toaa la wea q tenga el banco")
@@ -324,37 +388,6 @@ function cargarArchivoAlBanco(arregloDeTxts){
 		console.log(arregloDeTxts[i] );
 		guardarSeqEnBancoYSelect();
 	}
-}
-
-/*
-function guardarBanco(){
-
-	for(var i = 0; i < bancoDeSecuencias.length; i++){
-		//var ls = new Secuencia();
-		var ls = bancoDeSecuencias[i];//.getAllValuesAsArrayOfArrays();
-		
-		outlet(0,"toFile seqIndex "+bancoDeSecuencias[i].getSeqIndex());
-		outlet(0,"toFile seqName "+bancoDeSecuencias[i].seqName );
-		outlet(0,"toFile seqStringIn "+bancoDeSecuencias[i].getStringIn());
-		outlet(0,"toFile seqListaEventos "+bancoDeSecuencias[i].getListaEventos());
-		outlet(0,"toFile seqNotas "+bancoDeSecuencias[i].getSeqNotas());
-		outlet(0,"toFile seqDurs "+bancoDeSecuencias[i].getSeqDurs());
-		outlet(0,"toFile seqOns "+bancoDeSecuencias[i].getSeqOns());
-
-	}
-
-}
-*/
-
-/*
-var myJSON;
-
-function saveFile(){
-	myJSON = JSON.stringify(bancoDeSecuencias);
-	this.patcher.
-	messnamed("textObject",myJSON);
-
-	post( myJSON);
 }
 
 function writefile(s)
@@ -371,7 +404,7 @@ function writefile(s)
 		post("could not create file: " + s + "\n");
 	}
 }
-*/
+
 
 function readfile(s)
 {
