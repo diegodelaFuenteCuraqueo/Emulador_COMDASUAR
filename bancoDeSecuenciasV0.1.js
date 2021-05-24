@@ -272,6 +272,7 @@ function transmutaTonos(secNumA,secNumB){ //se le aplican tonos de secB a secA
 	elObjeto.seqNotas =	auxNotas.slice(0);
 	elObjeto.seqDurs  =	bancoDeSecuencias[secNumA].seqDurs.slice(0);
 	elObjeto.seqOnsets= bancoDeSecuencias[secNumA].seqOnsets.slice(0);
+	toBach();
 }
 
 function transmutaDuraciones(secNumA,secNumB){ //se le aplican durs. y ons. de sec2 a sec1
@@ -304,19 +305,21 @@ function transmutaDuraciones(secNumA,secNumB){ //se le aplican durs. y ons. de s
 	elObjeto.seqNotas = bancoDeSecuencias[secNumA].seqNotas.slice(0);;
 	elObjeto.seqDurs  = auxDurs.slice(0);
 	elObjeto.seqOnsets= auxOns.slice(0);
+	toBach();
+	
 } // - - - - - - - - - - - - - - - - //
 
 
 function toBach(){
-	var o = array2list(elObjeto.seqOnsets);
-	var p = array2list(elObjeto.seqNotas);
-	var d = array2list(elObjeto.seqDurs);
+	var o = elObjeto.getBachOnsets();
+	var p = elObjeto.getBachNotes();
+	var d = elObjeto.getBachDurs();
 
-	var str = "bach (("+o+"))"+"(("+p+"))"+"(("+d+"))";
+	var str = "bach ("+o+") "+"("+p+") "+"("+d+")";
 	outlet(0,str);
 	
-	var str2 = "bach marker addmarker "+elObjeto.seqOnsets[0]+" "+elObjeto.seqName;
-	outlet(0,str2);
+	//var str2 = "bach marker addmarker "+elObjeto.seqOnsets[0]+" "+elObjeto.seqName;
+	//outlet(0,str2);
 }
 
 function array2list(arreglo){

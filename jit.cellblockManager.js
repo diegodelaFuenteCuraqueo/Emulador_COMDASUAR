@@ -31,7 +31,9 @@ function bang(){
 	for(var y = 0; y<arrayB.length; y++){
 		for(var x = 0; x<arrayB[y].length; x++){
 			//post(arrayB[y][x]);
-			outlet(0,["cell","set",x,y,arrayB[y][x]]);
+			if(arrayB[y][x] != undefined && arrayB[y][x] != "undefined"){
+				outlet(0,["cell","set",x,y,arrayB[y][x]]);
+			}
 			 //cell.message("set",x,y,arrayB[y][x]);
 		}
 	}

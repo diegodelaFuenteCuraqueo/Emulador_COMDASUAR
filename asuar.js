@@ -569,6 +569,7 @@ function reproducir(indx){
 function guardarSeqEnBanco(ix){ 
 //	var s = "TO-BancoDeSeq setSeqO "+array2list(seqOnsets)+", setSeqN "+array2list(seqMidinotes)+", setSeqD "+array2list(seqMs);
 	try{
+		
 		outlet(0,"TO-BancoDeSeq setSeqSI '"+ stringIn+"'" );
 		post(" stringIn = "+ stringIn );
 		outlet(0,"TO-BancoDeSeq setSeqListaEventos "+array2list(listIn));
@@ -664,3 +665,28 @@ function filtrarSilencios(){
 
 
 }	
+
+function cargarSeqEnBachRoll(){
+
+	//filtramos creamos listas en formato bach (ignorando silencios)
+	var bachNotasLista = "( ";
+	var bachDuracionesLista = "( ";
+	var bachOnsetsLista = "( ";
+
+	for (var x = 0; x < seqMidinotes.length; x++){
+		if(seqMidinotes[x] > 0){	//los silencios son notas con valor < 0
+			bachNotasLista += seqMidinotes[x]+" ";
+			bachDuracionesLista += seqMs[x]+" ";
+			bachOnsetsLista += seqOnsets[x]+" ";
+		}
+	}
+	bachNotasLista += " )";
+	bachDuracionesLista += " )";
+	bachOnsetsLista += " )";
+
+	try{
+		outlet(1,bachOnsetsLista);
+		outlet(2,bachNotasLista);
+		outlet(3,bachDuracionesLista);
+	}catch(e){}
+}

@@ -30,7 +30,10 @@ function Secuencia ()  {
 	//notas que forman parte de la seq pero c/registro (s/repeticiones)
 	this.durSerie = [];
 
-	this.duracionTotal = 0;
+	//bach list strings
+	this.bachNotasLista = "";
+	this.bachDuracionesLista = "";
+	this.bachOnsetsLista = "";
 
 	//Nombre de la secuencia e índice dentro del banco
 	this.seqName 	= "sequence1";
@@ -66,9 +69,15 @@ function Secuencia ()  {
 	this.getSeqName			= function (){	return this.seqName;}
 	this.getSeqIndex		= function (){	return this.seqIndex;}
 
-	this.getBachNotes 		= function (){	return "("+this.array2str(this.seqNotas)+")";}
-	this.getBachDurs 		= function (){	return "("+this.array2str(this.seqDurs)+")";}
-	this.getBachOnsets 		= function (){	return "("+this.array2str(this.seqOnsets)+")";}
+	this.getBachNotes 		= function (){	
+		this.compilarBach();
+		return "("+this.bachNotasLista+")";}
+	this.getBachDurs 		= function (){	
+		this.compilarBach();
+		return "("+this.bachDuracionesLista+")";}
+	this.getBachOnsets 		= function (){	
+		this.compilarBach();
+		return "("+this.bachOnsetsLista+")";}
 
 	//getter de arrays
 	this.getListaEventos= function (){	
@@ -154,7 +163,7 @@ function Secuencia ()  {
 	this.analizarPitchSet = function (){
 		
 		for(var i = 0; i < this.seqAsuarNota.length ; i++){
-			this.pitchSet[i] = this.seqAsuarNota[i].replace(/[0-9]/g, '');
+			//this.pitchSet[i] = this.seqAsuarNota[i].replace(/[0-9]/g, '');
 			this.pitchSerie[i] = this.seqNotas[i];
 		}
 		//this.pitchSet = this.quitarDup(this.pitchSet).slice(0);
@@ -281,5 +290,23 @@ function Secuencia ()  {
 			lista += " " + arreglo[x];}
 		return lista;
 	}
+
+	//crea strings en formato lista bach (ignorando silencios)
+	this.compilarBach		= function(){
+ 
+		this.bachNotasLista = "";
+		this.bachDuracionesLista = "";
+		this.bachOnsetsLista = "";
+
+		for (var x = 0; x < this.seqNotas.length; x++){
+
+			if(this.seqNotas[x] > 0){	//los silencios son notas con valor < 0
+				this.bachNotasLista += this.seqNotas[x]+" ";
+				this.bachDuracionesLista += this.seqDurs[x]+" ";
+				this.bachOnsetsLista += this.seqOnsets[x]+" ";
+			}
+		}
+	}
+
 }//- - - - - - - - - - - - - - - - - - - - - - - //
 
