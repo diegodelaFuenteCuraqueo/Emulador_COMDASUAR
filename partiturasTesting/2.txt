@@ -1,0 +1,9 @@
+5d n
+r /
+d b
+f np
+4a c
+j5 1 3
+a np 
+f c 
+d n

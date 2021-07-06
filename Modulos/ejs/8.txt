@@ -1,0 +1,16 @@
+4f n
+/ c
+g /
+/ /
+/ /
+j2 bw
+cp
+/
+np
+j0
+r c
+f n
+5c cp
+4a s
+bw np
+r c

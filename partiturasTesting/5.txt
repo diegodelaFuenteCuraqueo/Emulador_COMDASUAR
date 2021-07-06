@@ -1,0 +1,14 @@
+j2 4c
+3s 
+j0
+r 3s 
+j2 4c
+3s 5c 5s s s 0m 
+j0
+r s 
+j2 4c
+c c r 7c 7m 
+j0
+r 7s 
+j2 4c
+7s 7s 7s c 5n ls
