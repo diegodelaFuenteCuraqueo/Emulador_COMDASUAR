@@ -23,6 +23,11 @@ class AMSparser{
         this.listaDePalabras = [];
         this.AMSalturas = [];
         this.AMSduraciones = [];
+
+        this.tempo = {
+            figura:"N", 
+            pulsoPorMin: 60
+        }
         
         //misma secuencia pero con todas las redundancias necesarias para que el diccionarioAsuar las reconozca
         this.codigoPlano = {
@@ -146,6 +151,11 @@ class AMSparser{
                 }
             //el elemento es un cambio de tempo -------------------------------------------------------------//
             }else if(codigoActual.includes("=")){
+                console.log("Cambiando pulso: "+codigoActual);
+
+                let tmp = codigoActual.split("=");
+                this.tempo.figura = tmp[0];
+                this.tempo.pulsoPorMin = parseFloat(tmp[1]);
 
             //el elemento altura o duración -----------------------------------------------------------------//
             }else{

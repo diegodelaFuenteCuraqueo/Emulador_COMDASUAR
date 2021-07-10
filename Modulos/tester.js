@@ -1,12 +1,19 @@
 const {AMSparser} = require('./AMSparser.js');
 const {DiccionarioAsuar} = require('./diccionarioAsuar.js');
 const {SecuenciaAsuar} = require("./SecuenciaAsuar.js");
+const {BancoDeSecuencias} = require("./BancoDeSecuencias.js");
+const {AdministradorDeBancos} = require("./AdministradorDeBancos.js");
+const fs  = require('fs');
+const { NotaAsuar } = require('./NotaAsuar.js');
 
 let COMPILADOR;
 let AMS ;
+let BANCO;
 
-const fs  = require('fs');
-const { NotaAsuar } = require('./NotaAsuar.js');
+let ADMIN = new AdministradorDeBancos();
+
+COMPILADOR = new DiccionarioAsuar();
+ADMIN.addBanco(new BancoDeSecuencias());
 
 function cargarArchivo(file){
     var texto = "";
@@ -16,34 +23,31 @@ function cargarArchivo(file){
     return str;
 }
 
-
-
+  
 function testParser(){
 
-    let archivo = "ejs/";
-    let archivoActual = "";
 
-    COMPILADOR = new DiccionarioAsuar();
+    let partituras= fs.readdirSync("./ejs");;
+    console.log(partituras.length+" archivos txt cargados.\n")
 
-    for(let i = 1; i < 9; i++){
+    for(let partitura of partituras){
 
         AMS = new AMSparser();
 
-        archivoActual = archivo+i+".txt";
-        let seq = new SecuenciaAsuar(archivoActual);
+        let seq = new SecuenciaAsuar(partitura);
 
-        console.log("\nCargando "+archivoActual+"- - - - - - - - - - - - - - - -");
-        let txt = cargarArchivo(archivoActual);
+        console.log("\nCargando "+partitura+"- - - - - - - - - - - - - - - -");
+        let txt = cargarArchivo("ejs/"+partitura);
         console.log(txt);
 
         AMS.cargarPartitura(txt);
+        seq.setCodigoAMS(AMS.stringIn);
 
         console.log("\nCOMPILANDO- - - - - - - - - - - - - - - - - - - - - - - -")
         AMS.compilar();
 
         console.log("\nLista de palabras: "+AMS.listaDePalabras.length)
         console.log(AMS.listaDePalabras.join(" ") +"\n");
-
 
         out = [];
         for(let x = 0; x <AMS.AMSduraciones.length; x++){
@@ -60,7 +64,11 @@ function testParser(){
                 " MIDICENT": COMPILADOR.alt2mc(AMS.codigoPlano.alturas[x]),
                 " DUR (MS.)": COMPILADOR.dur2ms(AMS.codigoPlano.duraciones[x])
             }); 
+
         }
+
+        ADMIN.bancos[0].addSeq(seq);
+
         console.table(out);
         seq.print();
 
@@ -74,4 +82,23 @@ function testParser(){
 
 }
 
-module.exports = {testParser, cargarArchivo};
+
+function desplegarBanco(){
+
+    ADMIN.bancos[0].print();
+
+}
+
+function exportarJSON(r){
+    let local = process.cwd()+"/";
+    ADMIN.exportarJSON(local+r+".json");
+}
+
+function importarJSON(r){
+    let local = process.cwd()+"/";
+    console.log("intentando cargar "+local);
+    ADMIN.importarJSON(local+r);
+    ADMIN.compilarJSON();
+}
+
+module.exports = {testParser, cargarArchivo,desplegarBanco,exportarJSON,importarJSON,ADMIN};

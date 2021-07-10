@@ -7,8 +7,7 @@
 +=================================================================================*/
 
 /** Contiene todos los elementos de la Sintaxis Musical Asuar (AMS).
- * Puede convertir datos de altura y duraciones.
- */
+ * Puede convertir datos de altura y duraciones.    */
 class DiccionarioAsuar{
 
     constructor(){
@@ -30,7 +29,7 @@ class DiccionarioAsuar{
             if(amsdur == "")  throw "código vacío. \"\" (?)";
             if(typeof amsdur != "string" || !Object.prototype.toString.call(amsdur).includes("String")) throw "tipo de dato incorrecto"
         }catch(e){
-            console.trace(" ERROR: "+e)
+            console.error(" ERROR: "+e)
             return ;
         }
 
@@ -48,16 +47,16 @@ class DiccionarioAsuar{
                  if(dur[i] === "P"){  
                     try{
                         duracionMS += (this.ritmos[dur[i-1]] * .5); 
-                    }catch(er){console.trace(" ERROR: AMS no reconocido (ritmo erroneo?). "+er)}
+                    }catch(er){console.error(" ERROR: AMS no reconocido (ritmo erroneo?). "+er)}
 
                 //si no es puntillo, entonces se suma la figura actual
                 }else if(!(dur[i] === "P") ){                  
                     try{
                         duracionMS += parseFloat(this.ritmos[dur[i]]);
-                    }catch(er){console.trace(" ERROR: AMS no reconocido (ritmo erroneo?). "+er)}
+                    }catch(er){console.error(" ERROR: AMS no reconocido (ritmo erroneo?). "+er)}
 
                 }else{
-                    console.trace(" ERROR : Ritmo no identificado (SD) "+dur[i]);}	    
+                    console.error(" ERROR : Ritmo no identificado (SD) "+dur[i]);}	    
             }
 
             //aplicamos el grupo irregular respectivo
@@ -72,23 +71,23 @@ class DiccionarioAsuar{
                 if(dur[i] === "P"){  
                     try{
                         duracionMS += ( parseFloat(this.ritmos[dur[i-1]]) * .5); 
-                    }catch(er){console.trace(" ERROR: AMS no reconocido (ritmo erroneo?). "+er)}
+                    }catch(er){console.error(" ERROR: AMS no reconocido (ritmo erroneo?). "+er)}
 
                 //si no es puntillo, entonces se suma la figura actual
                 }else if(!(dur[i] === "P") ){                  
                     try{
                         duracionMS += parseFloat(this.ritmos[dur[i]]);
-                    }catch(er){console.trace(" ERROR: AMS no reconocido (ritmo erroneo?). "+er)}
+                    }catch(er){console.error(" ERROR: AMS no reconocido (ritmo erroneo?). "+er)}
 
                 }else{
-                    console.trace(" ERROR : Ritmo no identificado "+dur[i]);}	    	    
+                    console.error(" ERROR : Ritmo no identificado "+dur[i]);}	    	    
             }
         }
 
         try{
             if(isNaN(duracionMS)) throw "ERROR al calcular duracion (código incorrecto? NaN) ;"
         }catch(err){
-            console.trace(err)
+            console.error(err)
         }
         return duracionMS;
     }
@@ -101,9 +100,9 @@ class DiccionarioAsuar{
 
         try{
             if(amsalt == "")  throw "código vacío. \"\" (?)";
-            if(typeof amsalt != "string" || !Object.prototype.toString.call(amsalt).includes("String")) throw "tipo de dato incorrecto"
+            if(typeof amsalt != "string" || !Object.prototype.toString.call(amsalt).includes("String")) throw `tipo de dato incorrecto ${typeof amsalt}`
         }catch(e){
-            console.trace(" ERROR: "+e);
+            console.error(" ERROR: "+e);
             return ;
         }
 
@@ -114,19 +113,19 @@ class DiccionarioAsuar{
         if(alt.length == 2){
             try{
                 midinote = this.octava[alt[0]] + this.notas[alt[1]];
-            }catch(er){console.trace(" ERROR: AMS no reconocido (nota erronea?). "+er);}
+            }catch(er){console.error(" ERROR: AMS no reconocido (nota erronea?). "+er);}
 
         //oct+nota+alteracion
         }else if(alt.length == 3){
             try{
                 midinote = this.octava[alt[0]] + this.notas[alt[1]] + this.alteraciones[alt[2]];
-            }catch(er){console.trace(" ERROR: AMS no reconocido (nota erronea?). "+er);}
+            }catch(er){console.error(" ERROR: AMS no reconocido (nota erronea?). "+er);}
         }
    
         try{
-            if(isNaN(midinote)) throw "ERROR al calcular nota (código incorrecto? NaN) ;"
+            if(isNaN(midinote)) throw "ERROR al calcular nota (código incorrecto? NaN) "+midinote;
         }catch(err){
-            console.trace(err)
+            console.error(err)
         }
         
         return midinote > 0 ? midinote : 0;
