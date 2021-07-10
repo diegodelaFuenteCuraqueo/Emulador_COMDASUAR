@@ -92,7 +92,7 @@ class DiccionarioAsuar{
         return duracionMS;
     }
 
-    /**AMSalt2midinote 
+    /** AMSalt2midinote 
      * @param {String} amsalt Altura en sintaxis musical Asuar (String)
      * @returns Altura en MIDI note.
      */
@@ -131,8 +131,7 @@ class DiccionarioAsuar{
         return midinote > 0 ? midinote : 0;
     }
 
-    /**
-     * AMSalt2midicent 
+    /** AMSalt2midicent 
      * @param {String} amsalt Altura en xintaxis musical Asuar (String)
      * @returns Altura en MIDI cent.
      */

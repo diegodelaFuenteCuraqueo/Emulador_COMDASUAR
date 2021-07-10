@@ -51,8 +51,11 @@ class NotaAsuar{
         this.fin = this.inicio+parseFloat(this.duracion.getMS());
     }
 
-    /**@param {*} i indice de la nota (relativo a la secuencia en donde está almacenada)    */
-    setIndice(i){    this.indice = i;}
+    /**@param {number} i indice de la nota (relativo a la secuencia en donde está almacenada)    */
+    setIndice(i){   this.indice = i;}
+
+    /** @param {number} ms nueva duración en milisegundos (reemplaza valor computado desde AMS) */
+    setMS(ms){      this.duracion.setMS(ms) }
 
     // GETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
     getInicio(){    return this.inicio;}

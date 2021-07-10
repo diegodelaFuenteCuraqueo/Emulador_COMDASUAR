@@ -7,7 +7,7 @@
 +=================================================================================*/
 
 const {NotaAsuar} = require('./NotaAsuar.js');
-
+const {DiccionarioAsuar} = require('./diccionarioAsuar.js');
 
 /**Clase SecuenciaAsuar
  * Reune una lista de notasAsuar y parámetros melódicos de la secuencia misma. */
@@ -17,12 +17,13 @@ class SecuenciaAsuar{
      * @param {String} nombreSeq nombre de la secuencia actual  */
     constructor(nombreSeq){
         this.nombre = nombreSeq;
-        this.notas=[];
         this.duracionTotal = 0;
-        this.tempo = 60;
+        this.tempo = {figura:"N", pulsosPorMin:60, duracionPulso:1000};
 
         this.codigoAMS = "";
         this.seqIndex = -1;  //indice de la secuencia (relativo al banco dnd está almacenada)
+
+        this.notas=[];
     }
 
     /** @param {NotaAsuar} nota Agrega un obj NotaAsuar al final de la secuencia     */
@@ -64,21 +65,49 @@ class SecuenciaAsuar{
         this.duracionTotal = durTotal;
     }
 
+    aplicarTempo(){
+
+        const BPM2MS = (t) => (60/t)*1000;
+        let diccionario = new DiccionarioAsuar();
+
+        if(this.tempo.figura != "N" || this.tempo.duracionPulso != 1000){
+            console.log(" ~ Cambiando tempo de secuencia: "+this.tempo.figura+"="+this.tempo.duracionPulso)
+            
+            let escalaTempo = BPM2MS( this.tempo.pulsosPorMin ) / diccionario.ritmos[this.tempo.figura];
+            console.log(" ~ (Escala de tempo : "+escalaTempo+")")
+
+            for(let n = 0; n < this.notas.length; n++){
+                this.notas[n].setMS( this.notas[n].getMS()*escalaTempo );
+            }
+
+            this.calcularDuracionTotal();
+            this.computarInicios(); 
+        }else{
+            console.log(" ~ (manteniendo pulso por defecto "+this.tempo.figura+"="+this.tempo.pulsosPorMin+")");
+        }
+    }
+
     cargarSecuencia(seq){
         this.nombre = seq.nombre;
         this.tempo = seq.tempo;
         this.codigoAMS = seq.codigoAMS;
         this.seqIndex = seq.seqIndex;
+
         this.notas=[];
-        console.log(`*** Cargando secuencia: ${seq.nombre}  (${seq.notas.length} notas)`)
+        console.log(`\n*** Cargando secuencia: ${seq.nombre}  (${seq.notas.length} notas)`)
         for(let n of seq.notas){
 
             let nota = new NotaAsuar(n.altura.alturaAMS,n.duracion.duracionAMS);
             nota.cargarNota(nota);
             this.notas.push(nota);
         }
-        this.calcularDuracionTotal();
-        this.computarInicios();
+        this.setTempo(seq.tempo);
+        /*
+        this.tempo.figura=seq.tempo.figura;
+        this.tempo.pulsosPorMinuto=seq.tempo.pulsosPorMin;
+        this.tempo.duracionPulso = seq.tempo.duracionPulso;
+        */
+        this.aplicarTempo();
     }
     // SETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
     /** @param {String} n nuevo nombre para la secuencia actual                    */
@@ -89,6 +118,12 @@ class SecuenciaAsuar{
 
     /** @param {String} str Texto con código Asuar original (sin procesar)         */
     setCodigoAMS(str){  this.codigoAMS = str;}
+
+    setTempo(t){
+        this.tempo.figura = t.figura;
+        this.tempo.pulsosPorMin = t.pulsosPorMin;
+        this.tempo.duracionPulso = (60/t.pulsosPorMin)*1000;
+    }
 
     // GETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
     getNombre(){            return this.nombre; }
@@ -152,21 +187,21 @@ class SecuenciaAsuar{
     print(){
         let separador = `\n+================== Secuencia Asuar \'${this.nombre}\' ==================+`;
         console.log(separador);
-        let dur = `Duración total : ${(this.duracionTotal/1000).toFixed(1)} seg.`;
+        let dur = `|  Duración total : ${(this.duracionTotal/1000).toFixed(1)} seg.  | Tempo: ${this.tempo.figura+"="+this.tempo.pulsosPorMin}  | `;
         let ind = this.seqIndex != -1 ? "#"+this.seqIndex : "";
-        let numnotas = ` ${ind}  (${this.notas.length} notas)\n`;
+        let numnotas = ` ${ind}  (${this.notas.length} notas) |\n`;
         console.log(dur+ " ".repeat(  separador.length - (dur.length+numnotas.length)  ) +numnotas);
 
         let out = [];
         for(let nota of this.notas){
-            let a = nota.altura;
-            let d= nota.duracion;
+            let a = nota.getMidicent();
+            let d= nota.getMS();
             let ini= nota.inicio.toFixed(1);
             let f= nota.fin;
             let x=nota.indice;
             let i = nota.getInicio();
-            out.push( { "Altura": a.alturaAMS,"Ritmo": d.duracionAMS,"MIDIcent": a.getMidicent(),
-                        "Inicio": parseFloat(ini),"Duración ms": (parseFloat( d.getMS() ))} );        
+            out.push( { "Altura": nota.altura.alturaAMS,"Ritmo": nota.duracion.duracionAMS,"MIDIcent": a,
+                        "Inicio": parseFloat(ini),"Duración ms": (parseFloat( d ))} );        
         }
         console.table(out);
     }

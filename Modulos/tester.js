@@ -36,6 +36,7 @@ function testParser(){
 
         let seq = new SecuenciaAsuar(partitura);
 
+        //cargamos txt en el parser y en el ams
         console.log("\nCargando "+partitura+"- - - - - - - - - - - - - - - -");
         let txt = cargarArchivo("ejs/"+partitura);
         console.log(txt);
@@ -43,12 +44,16 @@ function testParser(){
         AMS.cargarPartitura(txt);
         seq.setCodigoAMS(AMS.stringIn);
 
+        //compilamos y asignamos tempo
         console.log("\nCOMPILANDO- - - - - - - - - - - - - - - - - - - - - - - -")
         AMS.compilar();
 
         console.log("\nLista de palabras: "+AMS.listaDePalabras.length)
         console.log(AMS.listaDePalabras.join(" ") +"\n");
 
+        seq.setTempo(AMS.getTempo());
+
+        //ingresamos nota a nota
         out = [];
         for(let x = 0; x <AMS.AMSduraciones.length; x++){
 
@@ -69,7 +74,9 @@ function testParser(){
 
         ADMIN.bancos[0].addSeq(seq);
 
+        //imprime tabla con notas e info de seqs
         console.table(out);
+        seq.aplicarTempo();
         seq.print();
 
         console.log("mc : "+seq.getMidicents()+"\ndur: "+seq.getDuraciones()+"\nini: "+seq.getInicios()+"\n");
