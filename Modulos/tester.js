@@ -3,8 +3,9 @@ const {DiccionarioAsuar} = require('./diccionarioAsuar.js');
 const {SecuenciaAsuar} = require("./SecuenciaAsuar.js");
 const {BancoDeSecuencias} = require("./BancoDeSecuencias.js");
 const {AdministradorDeBancos} = require("./AdministradorDeBancos.js");
+const {NotaAsuar} = require('./NotaAsuar.js');
+
 const fs  = require('fs');
-const { NotaAsuar } = require('./NotaAsuar.js');
 
 let COMPILADOR;
 let AMS ;
@@ -25,7 +26,6 @@ function cargarArchivo(file){
 
   
 function testParser(){
-
 
     let partituras= fs.readdirSync("./ejs");;
     console.log(partituras.length+" archivos txt cargados.\n")
@@ -59,9 +59,8 @@ function testParser(){
 
             seq.addNota(new NotaAsuar(AMS.codigoPlano.alturas[x], AMS.codigoPlano.duraciones[x]));
             let n = seq.getUltimaNota();
-            //n.print();
     
-           out.push({ 
+            out.push({ 
                 " nota ": AMS.AMSalturas[x], 
                 "   dur. ":AMS.AMSduraciones[x], 
                 " nota (r) ": AMS.codigoPlano.alturas[x],    
@@ -84,16 +83,12 @@ function testParser(){
         console.log("Listas en formato BACH : \nAlturas:   "+seq.getBachMidicents());
         console.log("Inicios:   "+seq.getBachInicios());
         console.log("Duracioes: "+seq.getBachDuraciones());
-
     }
-
 }
 
 
 function desplegarBanco(){
-
     ADMIN.bancos[0].print();
-
 }
 
 function exportarJSON(r){

@@ -7,7 +7,7 @@
 +=================================================================================*/
 
 /** Contiene todos los elementos de la Sintaxis Musical Asuar (AMS).
- * Puede convertir datos de altura y duraciones.    */
+ * Puede convertir datos de altura y duraciones a otras magnitudes.    */
 class DiccionarioAsuar{
 
     constructor(){
@@ -94,8 +94,7 @@ class DiccionarioAsuar{
 
     /** AMSalt2midinote 
      * @param {String} amsalt Altura en sintaxis musical Asuar (String)
-     * @returns Altura en MIDI note.
-     */
+     * @returns Altura en MIDI note. */
     alt2mn( amsalt ){
 
         try{
@@ -133,8 +132,7 @@ class DiccionarioAsuar{
 
     /** AMSalt2midicent 
      * @param {String} amsalt Altura en xintaxis musical Asuar (String)
-     * @returns Altura en MIDI cent.
-     */
+     * @returns Altura en MIDI cent.*/
     alt2mc( amsalt ){
         return this.alt2mn(amsalt)*100;
     }

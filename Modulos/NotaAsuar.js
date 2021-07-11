@@ -6,17 +6,16 @@
 | creado por José Vicente Asuar durante los años 70'.                             |
 +=================================================================================*/
 
-
 const {DiccionarioAsuar} = require('./diccionarioAsuar.js');
 let AMS = new DiccionarioAsuar();
 
-/**Se compone de un objeto AlturaAsuar y un Duración Asuar.
- * Elemento utilizado en SecuenciaAsuar.    */
+/** Se compone de un objeto AlturaAsuar y DuracionAsuar.
+*  También incluye otros datos relativos a la nota tales como su posición relativa en la SecuenciaAsuar, el tiempo de inicio y final (entre otros). */
 class NotaAsuar{
 
     /** Nota generada utilizando nomenclatura Asuar (AMS)
-     *  @param {String} altura - Altura expresada en código Asuar (AMS)
-     *  @param {String} duracion - Duración expresada en código Asuar (AMS) */
+     *  @param {String} altura      Altura expresada en código Asuar (AMS)
+     *  @param {String} duracion    Duración expresada en código Asuar (AMS) */
     constructor(altura, duracion){
 
         this.altura = new AlturaAsuar(altura);
@@ -30,15 +29,12 @@ class NotaAsuar{
         this.esNota = true;
     }
 
-    /** @param {NotaAsuar} nota objeto NotaAsuar (JSON, sin métodos). Los valores serán copiados al objeto actual. */
+    /** @param {NotaAsuar} nota objeto NotaAsuar en formato JSON (sin métodos). Los valores serán copiados al objeto actual. */
     cargarNota(nota){
         console.log(`**** Cargando nota ${nota.altura.alturaAMS} ${nota.duracion.duracionAMS} (mc:${nota.altura.midinote} ms:${nota.duracion.duracionMS}) `) 
-        //console.log(`     ${Object.keys(nota)} \n${Object.keys(nota.altura)} \n${nota.altura.alturaAMS}`);
         this.esNota = nota.esNota;
-        //this.altura = null;
         this.altura = new AlturaAsuar(nota.altura.alturaAMS);
         this.altura.setMidicent(nota.altura.midicent);
-       // this.duracion = null;
         this.duracion = new DuracionAsuar(nota.duracion.duracionAMS);
         this.duracion.setMS(nota.duracion.duracionMS);
         this.setInicio(nota.inicio);
@@ -50,30 +46,24 @@ class NotaAsuar{
         this.inicio = ini;
         this.fin = this.inicio+parseFloat(this.duracion.getMS());
     }
-
     /**@param {number} i indice de la nota (relativo a la secuencia en donde está almacenada)    */
     setIndice(i){   this.indice = i;}
-
     /** @param {number} ms nueva duración en milisegundos (reemplaza valor computado desde AMS) */
     setMS(ms){      this.duracion.setMS(ms) }
 
     // GETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
-    getInicio(){    return this.inicio;}
-
+    /** @returns {number} inicio de la nota (con respecto a la secuencia a la que pertenece). */
+    getInicio(){            return this.inicio;}
     /** @returns {number} duración de la nota en milisegundos. */
-    getMS(){        return this.duracion.getMS();}
-
-    /** @returns {number} duración en codigo Asuar (AMS */
-    getAMSdur(){    return this.duracion.getDuracionAMS();}
-
+    getMS(){                return this.duracion.getMS();}
+    /** @returns {number} duración en codigo Asuar (AMS) */
+    getAMSdur(){            return this.duracion.getDuracionAMS();}
     /** @returns {number} altura en nota midi (0-127, 60 = Do central) */
-    getMidinote(){  return this.altura.getMidinote();}
-
+    getMidinote(){          return this.altura.getMidinote();}
     /**@returns {String} altura en código Asuar (AMS)   */
-    getAMSalt(){    return this.altura.getAMSalt();}
-
+    getAMSalt(){            return this.altura.getAMSalt();}
     /** @returns {number} altura en midicent (ej 6000 = Do central) */
-    getMidicent(){  return this.altura.getMidicent();}
+    getMidicent(){          return this.altura.getMidicent();}
     
     print(){
         let a = this.altura;
@@ -88,9 +78,7 @@ class NotaAsuar{
     }
 }
 
-/** El objeto AlturaAsuar interpreta el AMS de altura 
- * y permite convertir dicho dato a midinote o midicent
- */
+/** El objeto AlturaAsuar interpreta el código Asuar (AMS) de altura y permite convertir dicho dato a MIDI-note o MIDI-cent a partir del DiccionarioAsuar. */
 class AlturaAsuar{
 
     /** @param {String} altAMS altura en código Asuar (AMS) */
@@ -137,19 +125,15 @@ class AlturaAsuar{
     /** @returns {String} Altura en codigo Asuar (AMS) */
     getAlturaAMS(){         return this.alturaAMS}
 
-    clear(){
-
-    }
-
+    clear(){    }
 }
 
-/** Permite interpretar una duración en AMS para convertirla
- * a milisegundos o figura ritmica  */
+/** Permite interpretar una duración en código Asuar (AMS) para convertirla
+ * a milisegundos o figura ritmica a partir del DiccionarioAsuar*/
 class DuracionAsuar{
 
     /** @param {String} durAMS duracion en código Asuar (AMS)    */
     constructor(durAMS){
-
         //la duración en formato AMS y en MS
         this.duracionAMS = "";
         this.duracionMS = 0;
@@ -164,17 +148,15 @@ class DuracionAsuar{
 
     // SETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
     /** @param {String} durAMS - Duración expresada en codigo Asuar. */
-    setDuracionAMS(durAMS){    this.duracionAMS= durAMS;}
-
+    setDuracionAMS(durAMS){     this.duracionAMS= durAMS;}
     /** @param {number} ms duración en milisegundos  */
-    setMS(ms){              this.duracionMS = ms;}
+    setMS(ms){                  this.duracionMS = ms;}
 
     // GETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
     /** @return {number} duración en milisegundos */
-    getMS(){                return this.duracionMS; }
-
+    getMS(){                    return this.duracionMS; }
     /** @returns {String} duración en código Asuar (AMS) */
-    getDuracionAMS(){       return this.duracionAMS}
+    getDuracionAMS(){           return this.duracionAMS}
 }
 
 exports.NotaAsuar = NotaAsuar;

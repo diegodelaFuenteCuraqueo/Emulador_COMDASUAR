@@ -26,6 +26,15 @@ class SecuenciaAsuar{
         this.notas=[];
     }
 
+    clear(){
+        console.log(" * Limpiando SecuenciaAsuar...")
+        this.nombre="";
+        this.notas = [];
+        this.duracionTotal = 0;
+        this.codigoAMS = "";
+        this.seqIndex = -1;
+    }
+
     /** @param {NotaAsuar} nota Agrega un obj NotaAsuar al final de la secuencia     */
     addNota(nota){
         // nota instanceof NotaAsuar...
@@ -87,6 +96,7 @@ class SecuenciaAsuar{
         }
     }
 
+    /** @param {Object} seq Objeto Secuencia Asuar cargado como JSON (sin métodos). Reemplazará la secuencia actual. */
     cargarSecuencia(seq){
         this.nombre = seq.nombre;
         this.tempo = seq.tempo;
@@ -102,23 +112,16 @@ class SecuenciaAsuar{
             this.notas.push(nota);
         }
         this.setTempo(seq.tempo);
-        /*
-        this.tempo.figura=seq.tempo.figura;
-        this.tempo.pulsosPorMinuto=seq.tempo.pulsosPorMin;
-        this.tempo.duracionPulso = seq.tempo.duracionPulso;
-        */
         this.aplicarTempo();
     }
     // SETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
     /** @param {String} n nuevo nombre para la secuencia actual                    */
-    setNombre(n){       this.nombre = n;}
-    
+    setNombre(n){       this.nombre = n;}    
     /**@param {number} i Indice de la secuencia actual (relativo a su banco)       */
     setIndex(i){        this.seqIndex = i;}
-
     /** @param {String} str Texto con código Asuar original (sin procesar)         */
     setCodigoAMS(str){  this.codigoAMS = str;}
-
+    /** @param {Object} t Objeto Tempo a copiar (parámetros). */
     setTempo(t){
         this.tempo.figura = t.figura;
         this.tempo.pulsosPorMin = t.pulsosPorMin;
@@ -129,7 +132,7 @@ class SecuenciaAsuar{
     getNombre(){            return this.nombre; }
     getDuracionTotal(){     return this.duracionTotal; }
 
-    /** Lista de duraciones en formato Bach     */
+    /** @returns {String} Lista de duraciones en formato Bach     */
     getBachDuraciones(){
         let arrNotas = [];
         for(let nota of this.notas){
@@ -139,7 +142,7 @@ class SecuenciaAsuar{
         return "("+arrNotas.join(" ")+")";
     }
 
-    /** Lista de midicents en formato Bach  (incluye paréntesis e ignora silencios) */
+    /** @returns {string} Lista de midicents en formato Bach  (incluye paréntesis e ignora silencios) */
     getBachMidicents(){
         let arrMidic = [];
         for(let nota of this.notas){
@@ -149,7 +152,7 @@ class SecuenciaAsuar{
         return "("+arrMidic.join(" ")+")";
     }
     
-    /** Lista de inicios en formato Bach (incluye paréntesis e ignora silencios)*/
+    /** @returns {string} Lista de inicios en formato Bach (incluye paréntesis e ignora silencios)*/
     getBachInicios(){
         let arrIni = [];
         for(let nota of this.notas){
@@ -158,38 +161,35 @@ class SecuenciaAsuar{
         }
         return "("+arrIni.join(" ")+")";
     }
-
-    /** @returns {Array} arreglo con midicents de la secuencia (incluye paréntesis e ignora silencios) */
+    /** @returns {array} arreglo con midicents de la secuencia (incluye paréntesis e ignora silencios) */
     getMidicents(){
         let mc = [];
         for(let nota of this.notas){    mc.push(nota.getMidicent());}
         return mc;
     }
-
-    /** @returns {Array} arreglo con duraciones de la secuencia       */
+    /** @returns {array} arreglo con duraciones de la secuencia       */
     getDuraciones(){
         let d = [];
         for(let nota of this.notas){    d.push(nota.getMS());}
         return d;
     }
-    /** @returns {Array} arreglo con Inicios de la secuencia       */
+    /** @returns {array} arreglo con Inicios de la secuencia       */
     getInicios(){
         let i = [];
         for(let nota of this.notas){    i.push(nota.getInicio());}
         return i;
     }
-
     /** @param {number} indice Indice del array de notas (0 - cantidad de notas)  */
     getNota(indice){    return this.notas[indice];}
 
     getUltimaNota(){    return this.notas[this.notas.length-1];}
 
     print(){
-        let separador = `\n+================== Secuencia Asuar \'${this.nombre}\' ==================+`;
+        let separador = `\n+===================== Secuencia Asuar \'${this.nombre}\' =====================+`;
         console.log(separador);
-        let dur = `|  Duración total : ${(this.duracionTotal/1000).toFixed(1)} seg.  | Tempo: ${this.tempo.figura+"="+this.tempo.pulsosPorMin}  | `;
+        let dur = `| Duración total : ${(this.duracionTotal/1000).toFixed(1)} seg. | Tempo: ${this.tempo.figura+"="+this.tempo.pulsosPorMin} | `;
         let ind = this.seqIndex != -1 ? "#"+this.seqIndex : "";
-        let numnotas = ` ${ind}  (${this.notas.length} notas) |\n`;
+        let numnotas = ` ${ind} (${this.notas.length} notas) |\n`;
         console.log(dur+ " ".repeat(  separador.length - (dur.length+numnotas.length)  ) +numnotas);
 
         let out = [];
@@ -208,3 +208,5 @@ class SecuenciaAsuar{
 }
 
 exports.SecuenciaAsuar=SecuenciaAsuar;
+
+//SecuenciaAsuar.getBachInicios()

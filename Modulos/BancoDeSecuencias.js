@@ -7,7 +7,7 @@
 +=================================================================================*/
 const {SecuenciaAsuar} = require('./SecuenciaAsuar.js');
 
-/** Agrupa secuencias Asuar */
+/** Agrupa una o varias SecuenciasAsuar */
 class BancoDeSecuencias{
 
     constructor(nombreBanco){
@@ -15,20 +15,20 @@ class BancoDeSecuencias{
         this.secuencias=[];
     }
 
-    /**
-      * @param {SecuenciaAsuar} seq Recibe una SecuenciaAsuar (obj) y lo añade a la lista.  */
+    /** @param {SecuenciaAsuar} seq Recibe una SecuenciaAsuar (obj) y lo añade a la lista.  */
     addSeq(seq){
         this.secuencias.push(seq);
 
         let seqActual = this.secuencias.length-1;
         this.secuencias[seqActual].setIndex( seqActual );
 
-        if(this.secuencias[seqActual].getNombre() == undefined ){ 
+        if(this.secuencias[seqActual].getNombre() == undefined || this.secuencias[seqActual].getNombre() == ""){ 
             this.secuencias[seqActual].setNombre("AsuarSeq_"+seqActual);
         }
 
     }
 
+    /** @param {BancoDeSecuencias} b BancoAsuar cargado como objeto JSON (sin métodos). Reemplazará el banco actual. */
     cargarBanco(b){
         this.clear();
         this.nombre = b.nombre;
@@ -40,22 +40,28 @@ class BancoDeSecuencias{
         }
     }
     //SETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
+    /** @param {string} n Nuevo nombre para el banco actual. */
+    setNombre(n){       this.nombre = n;   }
 
     //GETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
+    /** 
+     * @param {number} indx indice de la secuencia 
+     * @returns SecuenciaAsuar seleccionada del banco.  */
     getSeq(indx){       return this.secuencias[indx];}
 
+    /** @returns {number} Cantidad de secuencias almacenadas en el BancoDeSecuencias. */
     getSize(){          return this.secuencias.length;}
 
     print(){
         console.log();
-        let separador = `================= BANCO DE SECUENCIAS \'${this.nombre}\' =================`;
-        console.log( "=".repeat(separador.length)+"\n"+ separador+"\n"+"=".repeat(separador.length));
+        let separador = `|================= BANCO DE SECUENCIAS \'${this.nombre}\' =================|`;
+        console.log( "+"+"=".repeat(separador.length-2)+"+\n"+ separador+"\n|"+"=".repeat(separador.length-2)+"|");
         
         let seqGuardadas = "   "+this.secuencias.length+" Secuencias  ";
         let bordes = (separador.length - seqGuardadas.length-2)/2;
         console.log("|"+" ".repeat(bordes )+seqGuardadas+" ".repeat(bordes )+" |");
 
-        console.log("-".repeat(separador.length));
+        console.log("+"+"-".repeat(separador.length-2)+"+");
         for(let sq of this.secuencias){
             sq.print();
         }
@@ -68,6 +74,7 @@ class BancoDeSecuencias{
     }
 
     clear(){
+        console.log(" * Limpiando BancoDeSecuencias...");
         this.secuencias = [];
     }
 

@@ -7,17 +7,15 @@
 +=================================================================================*/
 
 
-/** 
- * Convierte código Asuar en lista de alturas y duraciones 
- * siguiendo la misma nomenclatura. */ 
+/**Convierte código Asuar (AMS) en lista de alturas y duraciones 
+ * siguiendo la misma nomenclatura (sin hacer conversiones). */ 
 class AMSparser{
 
     constructor(){
         this.clear();
     }
 
-    /**
-     * Vacía las variables del objeto   */
+    /** Vacía las variables del objeto   */
     clear(){
         this.stringIn = "";     //texto de entrada
         this.listaDePalabras = [];
@@ -43,17 +41,14 @@ class AMSparser{
         }
     }
 
-    /**
-     * @param {String} AMSstring Texto de entrada con partitura escrita en código (AMS)
-     */
+    /** @param {String} AMSstring Texto de entrada con partitura escrita en código (AMS) */
     cargarPartitura(AMSstring){
         this.clear();
         this.stringIn = AMSstring;
         this.listaDePalabras = this.txt2listaPalabras(AMSstring);
     }
 
-    /**
-     * Aplica las redundancias a cada elemento de las secuencias Asuar
+    /** Aplica las redundancias a cada elemento de las secuencias Asuar
      * de modo que puedan ser interpretadas individualmente por el diccionario asuar
      * Las alturas deben indicar por lo menos octava y nota (alteración opcional)
      * Las duraciones deben indicar almenos 1 ritmo y su grupo irregular,
@@ -95,13 +90,11 @@ class AMSparser{
 
     }
 
-    /**
-     * Convierte el texto de entrada en listas de alturas y duraciones.
-     * También aplica los cambios de modo y repeticiones de pasajes:
+    /** Convierte el texto de entrada en listas de alturas y duraciones.
+     *  También aplica los cambios de modo y repeticiones de pasajes:
      *  J0, J1, J2    =     MODOS DE INPUT
      *  J4, J5        =     MODOS DE REPETICIÓN
-     *  J3, J6, J7    =     MODOS DE MODULACION DE NOTA (aun no implementado :c )
-     */
+     *  J3, J6, J7    =     MODOS DE MODULACION DE NOTA (aun no implementado :c )   */
     compilar(){
         console.log("========================== AMS PARSER ========================== ");
         let modoInputActivo = 0;
@@ -136,7 +129,7 @@ class AMSparser{
                     console.log("  CAMBIO DE MODO   : "+codigoActual+"\n  Altura constante : "+alturaConstanteJ2+"\n (saltando siguiente)");
                     i++; continue;
                 
-                }else if(codigoActual[1]=="3"){     //J3  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+                }else if(codigoActual[1]=="3"){     //J3 Glissando (pendiente) -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 
                 }else if(codigoActual[1]=="4"){     //J4 repite notas (hasta cambio de modo)  -  -  -  -  -  -  
                     this.J4.activo = true;
@@ -186,8 +179,7 @@ class AMSparser{
         this.aplicarRedundancias();
     }
 
-    /**
-     * En caso de que se active otro modo, el modo J4 debe insertar todas las notas
+    /** En caso de que se active otro modo, el modo J4 debe insertar todas las notas
      * almacenadas a este momento. Esta función se encarga de eso...    */
     aplicarRepeticionesJ4(){
         if(this.J4.activo){
@@ -200,11 +192,9 @@ class AMSparser{
         }
     }
 
-    /**
-     * Aplica modo J5 (repite pasaje)
+    /** Aplica modo J5 (repite pasaje)
      * @param {numbrer} desde indice de la nota desde donde hay quecopiar
-     * @param {number} hasta indice de la nota hasta donde hay que copiar (inclusive)
-     */
+     * @param {number} hasta indice de la nota hasta donde hay que copiar (inclusive) */
     copiarPasajeJ5(desde,hasta){
         let J5desde = desde;
         let J5hasta = hasta;
@@ -221,8 +211,7 @@ class AMSparser{
 
     /**TXT2lista de palabras:
      * @param {String} stringIN cadena de texto con saltos de líneas y espacios.
-     * @returns Array con palabras individuales (sin espacios ni saltos de línea).
-     */
+     * @returns Array con palabras individuales (sin espacios ni saltos de línea).*/
     txt2listaPalabras(stringIN){
         //eliminamos saltos de linea y espacios duplicados
         let txtSinNewLine = stringIN.replace(/\n+/g," ");
@@ -240,6 +229,9 @@ class AMSparser{
         return arregloDePalabras;
     }
 
+    /**
+     * @returns {Object} Retorna objeto tempo con sus parámetros.
+     */
     getTempo(){ return this.tempo;}
 
 }
@@ -250,3 +242,5 @@ exports.AMSparser = AMSparser;
 const {AMSparser} = require('./AMSparser.js');
 let AMSparser = new AMSparser();
 */
+
+AMSparser.txt2listaPalabras()
