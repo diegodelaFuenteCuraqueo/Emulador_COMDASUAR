@@ -16,10 +16,36 @@ class AdministradorDeBancos{
     constructor(){
         this.bancos = [];
         this.JSONin = "";
+        this.bancoActual = 0;
     }
 
+    //METODOS PARA LA MANIPULACIÓN DE DATOS DE LOS BANCOS - - - - - - - - - - - - - - - - - - - - - 
     /** @param {BancoDeSecuencias} b Banco de secuencias para agregar al final del arreglo */
-    addBanco(b){        this.bancos.push(b);    }
+    addBanco(b){            
+        this.bancos.push(b);    
+        this.bancoActual = this.bancos.length-1;
+        this.bancos[this.bancoActual].setIndice(this.bancoActual);
+    }
+
+    /** @param {number} n indice del banco a manipular ( 0 a bancos.length ) */
+    selBanco(n){    
+        if( n <= this.bancos.length -1 ){    
+            this.bancoActual = n;   
+        }else{  
+            console.error("ERROR : indice incorrecto para el banco. "+n+" ( "+typeof n+" )");}
+    }
+
+    /** @param {string} nombreBanco Nombre del banco a seleccionar. Si hay más de un banco con el mismo nombre seleccionará el primero. */
+    selPorNombre(nombreBanco){
+        for(let b of this.bancos){
+            if(b.getNombre() == nombreBanco){
+                this.selBanco(b.getIndice());
+            }
+        }
+    }
+
+    /** Permite manipular el banco seleccionado (con selBanco(n)) */
+    editBanco()    { return this.bancos[this.bancoActual]; }
 
     /** Elimina todos los BancosAsuar */
     clear(){
@@ -38,6 +64,7 @@ class AdministradorDeBancos{
         console.log("#"+" ".repeat(bordes )+bancosGuardados+" ".repeat(bordes )+" #");
     }
 
+    //METODOS PARA EL USO DE ARCHIVOS (IN/OUT) - - - - - - - - - - - - - - - - - - - - - - - 
     /** @param {string} rutaArchivo Ruta desde donde se cargará el archivo JSON con los bancos.  */
     importarJSON(rutaArchivo){
         this.JSONin = "";

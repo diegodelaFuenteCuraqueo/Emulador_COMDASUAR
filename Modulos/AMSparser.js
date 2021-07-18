@@ -242,5 +242,3 @@ exports.AMSparser = AMSparser;
 const {AMSparser} = require('./AMSparser.js');
 let AMSparser = new AMSparser();
 */
-
-AMSparser.txt2listaPalabras()

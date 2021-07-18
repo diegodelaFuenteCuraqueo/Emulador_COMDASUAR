@@ -23,7 +23,7 @@ class DiccionarioAsuar{
     /** Convierte duración en AMS a milisegundos
      * @param {String} amsdur Duración en sintaxis musical Asuar (String)
      * @returns {number} Duración en milisegundos.  */
-    dur2ms( amsdur ){
+     dur2ms( amsdur ){
 
         try{
             if(amsdur == "")  throw "código vacío. \"\" (?)";

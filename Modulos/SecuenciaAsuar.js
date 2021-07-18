@@ -182,13 +182,15 @@ class SecuenciaAsuar{
     /** @param {number} indice Indice del array de notas (0 - cantidad de notas)  */
     getNota(indice){    return this.notas[indice];}
 
+    getIndice(){        return this.seqIndex;}
+
     getUltimaNota(){    return this.notas[this.notas.length-1];}
 
     print(){
         let separador = `\n+===================== Secuencia Asuar \'${this.nombre}\' =====================+`;
         console.log(separador);
         let dur = `| Duración total : ${(this.duracionTotal/1000).toFixed(1)} seg. | Tempo: ${this.tempo.figura+"="+this.tempo.pulsosPorMin} | `;
-        let ind = this.seqIndex != -1 ? "#"+this.seqIndex : "";
+        let ind = this.seqIndex != -1 ? "Indice #"+this.seqIndex : "";
         let numnotas = ` ${ind} (${this.notas.length} notas) |\n`;
         console.log(dur+ " ".repeat(  separador.length - (dur.length+numnotas.length)  ) +numnotas);
 
