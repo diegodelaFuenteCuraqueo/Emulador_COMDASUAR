@@ -76,7 +76,7 @@ function testParser(){
         //imprime tabla con notas e info de seqs
         console.table(out);
         seq.aplicarTempo();
-        seq.print();
+        seq.print()
 
         console.log("mc : "+seq.getMidicents()+"\ndur: "+seq.getDuraciones()+"\nini: "+seq.getInicios()+"\n");
 

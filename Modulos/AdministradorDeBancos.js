@@ -8,7 +8,7 @@
 
 const fs  = require('fs');
 const {BancoDeSecuencias} = require("./BancoDeSecuencias.js");
-
+const {SecuenciaAsuar} = require('./SecuenciaAsuar.js');
 /**Clase AdministradorDeBancos
  * Reúne uno o varios BancosDeSecuencias. Permite exportarlos en formato JSON así como también importarlos (reemplazando a los bancos pre-existentes). */
 class AdministradorDeBancos{
@@ -101,6 +101,26 @@ class AdministradorDeBancos{
         let JSONout = JSON.stringify(this.bancos);
         try {               fs.writeFileSync(rutaArchivo, JSONout)
         } catch (err) {     console.error(err)  } 
+    }
+
+    //GETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    getEtiquetasBancos(){
+        let etiquetas = [];
+        
+        for(let b of this.bancos){
+            etiquetas.push( b.getIndice() + " " + b.getNombre());
+        }
+        return etiquetas;
+    }
+
+    getEtiquetasSecuencias(){
+        let etiquetas = [];
+        
+        for(let s of this.editBanco().secuencias){
+            etiquetas.push( s.getIndice() + " " + s.getNombre());
+        }
+        return etiquetas;
+
     }
 
 }

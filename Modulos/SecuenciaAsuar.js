@@ -16,7 +16,7 @@ class SecuenciaAsuar{
     /**Crea una secuenciaAsuar (secuencia de NotaAsuar's)
      * @param {String} nombreSeq nombre de la secuencia actual  */
     constructor(nombreSeq){
-        this.nombre = nombreSeq;
+        this.nombre = nombreSeq == "" || nombreSeq == undefined ? "[AsuarSeq] "  : nombreSeq;
         this.duracionTotal = 0;
         this.tempo = {figura:"N", pulsosPorMin:60, duracionPulso:1000};
 
@@ -90,15 +90,15 @@ class SecuenciaAsuar{
             }
 
             this.calcularDuracionTotal();
-            this.computarInicios(); 
         }else{
             console.log(" ~ (manteniendo pulso por defecto "+this.tempo.figura+"="+this.tempo.pulsosPorMin+")");
         }
+        this.computarInicios(); 
     }
 
     /** @param {Object} seq Objeto Secuencia Asuar cargado como JSON (sin métodos). Reemplazará la secuencia actual. */
     cargarSecuencia(seq){
-        this.nombre = seq.nombre;
+        this.nombre = seq.nombre == "" || seq.nombre == undefined ? "Seq" : seq.nombre;
         this.tempo = seq.tempo;
         this.codigoAMS = seq.codigoAMS;
         this.seqIndex = seq.seqIndex;
@@ -113,6 +113,7 @@ class SecuenciaAsuar{
         }
         this.setTempo(seq.tempo);
         this.aplicarTempo();
+        this.computarInicios();
     }
     // SETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
     /** @param {String} n nuevo nombre para la secuencia actual                    */
@@ -192,7 +193,9 @@ class SecuenciaAsuar{
         let dur = `| Duración total : ${(this.duracionTotal/1000).toFixed(1)} seg. | Tempo: ${this.tempo.figura+"="+this.tempo.pulsosPorMin} | `;
         let ind = this.seqIndex != -1 ? "Indice #"+this.seqIndex : "";
         let numnotas = ` ${ind} (${this.notas.length} notas) |\n`;
-        console.log(dur+ " ".repeat(  separador.length - (dur.length+numnotas.length)  ) +numnotas);
+
+        let rep = separador.length - (dur.length+numnotas.length) < 0 ? 1 :  separador.length - (dur.length+numnotas.length) ;
+        console.log(dur+ " ".repeat(  rep ) +numnotas);
 
         let out = [];
         for(let nota of this.notas){

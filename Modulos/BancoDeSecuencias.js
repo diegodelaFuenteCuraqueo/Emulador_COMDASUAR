@@ -6,15 +6,19 @@
 | creado por José Vicente Asuar durante los años 70'.                             |
 +=================================================================================*/
 const {SecuenciaAsuar} = require('./SecuenciaAsuar.js');
+const {AMSparser} = require('./AMSparser.js');
+const {NotaAsuar} = require('./NotaAsuar.js');
 
 /** Agrupa una o varias SecuenciasAsuar */
 class BancoDeSecuencias{
 
     constructor(nombreBanco){
-        this.nombre = nombreBanco;
+        this.nombre = nombreBanco == undefined || nombreBanco == "" ? "[AsuarBank] " : nombreBanco ;
         this.secuencias=[];
         this.seqActual = 0;
         this.indice = -1;
+
+        this.AMS = new AMSparser();
     }
 
     //METODOS PARA LA MANIPULACION DE DATOS DE LAS SECUENCIAS - - - - - - - - - - - - - - - //
@@ -30,6 +34,25 @@ class BancoDeSecuencias{
         }
     }
 
+    /** @param {string} amsSeq Recibe una partitura en formato AMS, la convierte en una SecuenciaAsuar y luego será añadida al banco. */
+    addSeqAMS(amsSeq) {
+        let seq = new SecuenciaAsuar();
+
+        //carga y compila el código AMS
+        this.AMS.cargarPartitura(amsSeq);
+        this.AMS.compilar();
+
+        seq.setCodigoAMS(amsSeq);
+        for(let x = 0; x < this.AMS.AMSduraciones.length; x++){ //ingresa nota por nota
+            seq.addNota( new NotaAsuar(this.AMS.codigoPlano.alturas[x], this.AMS.codigoPlano.duraciones[x]));
+        }
+
+        seq.setTempo(this.AMS.getTempo());
+        seq.aplicarTempo();
+
+        this.addSeq(seq); //la agrega al banco
+    }
+
     /** @param {number} n indice de la secuencia a manipular ( 0 a secuencias.length ) */
     selSeq(n){
         if( n <= this.secuencias.length -1 ){
@@ -38,6 +61,7 @@ class BancoDeSecuencias{
             console.error("ERROR : indice incorrecto para la secuencia. "+n+" ( "+typeof n+" )");
         }
     }
+
     /** @param {string} nombreSeq Nombre de la secuencia a seleccionar. Si hay más de una secuencia con el mismo nombre seleccionará la primera. */
     selPorNombre(nombreSeq){
         for(let s of this.secuencias){
@@ -53,7 +77,10 @@ class BancoDeSecuencias{
     /** @param {BancoDeSecuencias} b BancoAsuar cargado como objeto JSON (sin métodos). Reemplazará el banco actual. */
     cargarBanco(b){
         this.clear();
-        this.nombre = b.nombre;
+
+        this.indice = b.indice == undefined ? 0 : b.indice; 
+        this.nombre = b.nombre == "" || b.nombre == undefined ? "[AsuarBank] " : b.nombre;
+        
         console.log(`** Cargando banco ${b.nombre} (${b.secuencias.length} Secuencias)`);
         for(let s of b.secuencias){
             let sec = new SecuenciaAsuar();
@@ -61,10 +88,12 @@ class BancoDeSecuencias{
             this.secuencias.push(sec);
         }
     }
+
     //SETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
     /** @param {string} n Nuevo nombre para el banco actual. */
     setNombre(n){       this.nombre = n;   }
 
+    /** @param {number} i Índice del banco actual (relativo al Administrador de Bancos) */
     setIndice(i){       this.indice = i; }
 
     //GETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
@@ -76,6 +105,10 @@ class BancoDeSecuencias{
     /** @returns {number} Cantidad de secuencias almacenadas en el BancoDeSecuencias. */
     getSize(){          return this.secuencias.length;}
 
+    /** @returns {number} Retorna el índice del banco actual, relativo al Administrador de Bancos (0 - ...) */
+    getIndice() {       return this.indice;}
+
+    /** @returns {string} Retorna el nombre del Banco */
     getNombre(){        return this.nombre}
 
     print(){
