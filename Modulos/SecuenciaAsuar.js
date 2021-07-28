@@ -64,6 +64,7 @@ class SecuenciaAsuar{
             this.notas[n].setInicio(ini);
             this.notas[n].indice = n;
         }
+        this.calcularDuracionTotal();
     }
 
     /**Calcula la duración total de la secuencia
@@ -129,6 +130,30 @@ class SecuenciaAsuar{
         this.tempo.duracionPulso = (60/t.pulsosPorMin)*1000;
     }
 
+    /**
+     * @param {array} ms arreglo con duraciones en milisegundos. Reemplazará las duraciones actuales y computará los inicios de cada nota a partir de los cambios.
+     */
+    setDuraciones(ms){
+        let contador = 0;
+        for(let nota of this.notas){
+            if(ms[contador] != undefined || ms[contador] != null){
+                nota.setMS( ms[contador++] );
+            }
+        }
+        this.computarInicios();
+    }
+
+    /**
+     * @param {array} mcs arreglo con midicents. Reemplazará los midicents actuales
+     */
+    setMidicents(mcs){
+        let contador = 0;
+        for(let nota of this.notas){
+            if(mcs[contador] != undefined || mcs[contador] != null){
+                nota.altura.setMidicent( mcs[contador++] );
+            }
+        }
+    }
     // GETTERS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
     getNombre(){            return this.nombre; }
     getDuracionTotal(){     return this.duracionTotal; }

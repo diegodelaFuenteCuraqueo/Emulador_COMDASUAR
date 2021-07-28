@@ -1,6 +1,7 @@
 const path = require('path');
 const Max = require('max-api');
 const fs  = require('fs');
+const Heuristicos = require('./Heuristicos.js');
 
 const {EmuladorComdasuar} = require("./EmuladorComdasuar.js")
 let comdasuar = new EmuladorComdasuar();
@@ -33,6 +34,7 @@ Max.addHandler("nuevaPartituraAMS", (partituraAMS) => {
     Max.outlet(inicios);
     Max.outlet(duraciones);
     Max.outlet("bach.roll bang")
+    Max.outlet("bach.roll addmarker 0 "+comdasuar.editBanco().editSeq().getNombre());
 
     setTextedit(comdasuar.editSeq().codigoAMS.replace(/\n+/g," "));
 });
@@ -51,6 +53,7 @@ Max.addHandler("reemplazarPartituraAMS", (partituraAMS) => {
     Max.outlet("inicios " +inicios);
     Max.outlet("duraciones "+duraciones);
     Max.outlet("bach.roll bang")
+    Max.outlet("bach.roll addmarker 0 "+comdasuar.editBanco().editSeq().getNombre());
 
     Max.post("NODE: "+comdasuar.editSeq().print());
     actualizarUmenus();
@@ -68,6 +71,53 @@ Max.addHandler("saveJSON", (ruta) => {
 Max.addHandler("umenu_secuencias", (index) =>{
 
     comdasuar.selSeq(index);
+    
+    cargarPartituraEnRoll();
+
+    setTextNombres(comdasuar.editBanco().getNombre(), comdasuar.editSeq().getNombre());
+})
+
+Max.addHandler("txtNombreBanco", (nom) => {
+   comdasuar.editBanco().setNombre(nom); 
+   actualizarUmenus();
+});
+
+Max.addHandler("txtNombreSeq", (nom) => {
+    comdasuar.editSeq().setNombre(nom); 
+    actualizarUmenus();
+ });
+
+Max.addHandler("umenu_bancos", (index) =>{
+    comdasuar.selBanco(index);
+    actualizarUmenus();
+    cargarPartituraEnRoll();
+
+    Max.post("BANCO: "+comdasuar.ADMIN.bancoActual+" SECUENCIA: "+comdasuar.ADMIN.editBanco().seqActual);
+});
+
+Max.addHandler("transmutarRandom", ()=>{
+
+    let seqA = comdasuar.editBanco().getSeq(Math.floor(Math.random()*comdasuar.editBanco().secuencias.length));
+    let seqB = comdasuar.editBanco().getSeq(Math.floor(Math.random()*comdasuar.editBanco().secuencias.length));
+    
+    Heuristicos.transmutarAlturas(seqA,seqB);
+
+    let midicents = "midicents "+seqA.getBachMidicents();
+    let inicios = "inicios "+seqA.getBachInicios();
+    let duraciones = "duraciones "+seqA.getBachDuraciones();
+
+    Max.outlet(midicents);
+    Max.outlet(inicios);
+    Max.outlet(duraciones);
+    Max.outlet("bach.roll bang");
+    Max.outlet("bach.roll play");
+    Max.outlet("finishBang "+seqA.getDuracionTotal());
+
+});
+
+//funciones para controlar Bach.roll
+const cargarPartituraEnRoll = () => {
+
     let midicents = "midicents "+comdasuar.editBanco().editSeq().getBachMidicents();
     let inicios = "inicios "+comdasuar.editBanco().editSeq().getBachInicios();
     let duraciones = "duraciones "+comdasuar.editBanco().editSeq().getBachDuraciones();
@@ -79,23 +129,7 @@ Max.addHandler("umenu_secuencias", (index) =>{
 
     setTextedit(comdasuar.editSeq().codigoAMS)
     Max.post("BANCO: "+comdasuar.ADMIN.bancoActual+" SECUENCIA: "+comdasuar.ADMIN.editBanco().seqActual);
-
-    setTextNombres(comdasuar.editBanco().getNombre(), comdasuar.editSeq().getNombre());
-})
-
-Max.addHandler("txtNombreBanco", (nom) => {
-   comdasuar.editBanco().setNombre(nom); 
-});
-
-Max.addHandler("txtNombreSeq", (nom) => {
-    comdasuar.editSeq().setNombre(nom); 
- });
-
-Max.addHandler("umenu_bancos", (index) =>{
-    comdasuar.selBanco(index);
-    actualizarUmenus();
-    Max.post("BANCO: "+comdasuar.ADMIN.bancoActual+" SECUENCIA: "+comdasuar.ADMIN.editBanco().seqActual);
-});
+}
 
 const rutaOSX = (r) =>{
     let rt = r.split(":");
@@ -103,14 +137,73 @@ const rutaOSX = (r) =>{
     return rutaCompleta;
 }
 
+// Funciones control heurísticos
+Max.addHandler("transportar",(st) =>{
+    comdasuar.transportarSeq(st);
+    cargarPartituraEnRoll();
+});
+
+Max.addHandler("invertir", (eje) => {
+    comdasuar.invertirSeq(eje);
+    cargarPartituraEnRoll();
+});
+Max.addHandler("expandirAlturas",(eje,escala) =>{
+    comdasuar.expandirAlturasSeq(eje,escala);
+    cargarPartituraEnRoll();
+});
+Max.addHandler("expandirDuraciones",(escala) =>{
+    comdasuar.expandirDuracionesSeq(escala);
+    cargarPartituraEnRoll();
+});
+Max.addHandler("reordenarAlturas",(eje,escala) =>{
+    comdasuar.desordenarAlturasSeq(eje,escala);
+    cargarPartituraEnRoll();
+});
+Max.addHandler("reordenarDuraciones",(escala) =>{
+    comdasuar.desordenarDuracionesSeq(escala);
+    cargarPartituraEnRoll();
+});
+Max.addHandler("retrogradarAlturas", () => {
+    comdasuar.retrogradarAlturasSeq();
+    cargarPartituraEnRoll();
+});
+
+Max.addHandler("retrogradarDuraciones" , () => {
+    comdasuar.retrogradarDuracionesSeq();
+    cargarPartituraEnRoll();
+});
+
+Max.addHandler("transmutarAlturas", (bankB, indiceSeqB) => {
+    comdasuar.transmutarAlturasBankSeq(bankB, indiceSeqB);
+    cargarPartituraEnRoll();
+});
+
+Max.addHandler("transmutarDuraciones", (bankB, indiceSeqB) => {
+    comdasuar.transmutarDuracionesBankSeq(bankB, indiceSeqB);
+    cargarPartituraEnRoll();
+})
+
+Max.addHandler("nuevoBanco", () => {
+    comdasuar.nuevoBanco();
+    actualizarUmenus();
+})
+
+
+
 // Funciones para controler GUI's de la interfaz de Max.
 const actualizarUmenus = ()=> {
     limpiarUmenus();
     Max.post("NODE: actualizando umenus")
     for(let etiquetaBanco of comdasuar.ADMIN.getEtiquetasBancos()){
-        Max.outlet("umenu_bancos append "+etiquetaBanco);}
+        Max.outlet("umenu_bancos append "+etiquetaBanco);
+    }
     for(let etiquetaSeq of comdasuar.ADMIN.getEtiquetasSecuencias()){
-        Max.outlet("umenu_secuencias append "+etiquetaSeq);}
+        Max.outlet("umenu_secuencias append "+etiquetaSeq);
+        
+    }
+    Max.outlet("umenu_bancos set "+comdasuar.ADMIN.getBancoActualIndex());   
+    Max.outlet("umenu_secuencias set "+comdasuar.editBanco().getSecuenciaActualIndex());     
+
 }
 
 const setTextedit = (txt) =>{    
@@ -126,3 +219,8 @@ const setTextNombres = (banco,seq) => {
     Max.outlet("txtNombreBanco "+banco);
     Max.outlet("txtNombreSeq "+seq);
 }
+
+//otras funciones para
+Max.addHandler("checkSeq", ()=>{
+    comdasuar.getSeq().print();
+})

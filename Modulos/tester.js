@@ -4,6 +4,8 @@ const {SecuenciaAsuar} = require("./SecuenciaAsuar.js");
 const {BancoDeSecuencias} = require("./BancoDeSecuencias.js");
 const {AdministradorDeBancos} = require("./AdministradorDeBancos.js");
 const {NotaAsuar} = require('./NotaAsuar.js');
+const {EmuladorComdasuar} = require("./EmuladorComdasuar.js");
+
 
 const fs  = require('fs');
 
@@ -86,6 +88,37 @@ function testParser(){
     }
 }
 
+ let comdasuar = new EmuladorComdasuar();
+function tester2(){
+    let partituras= fs.readdirSync("./ejs");;
+    console.log(partituras.length+" archivos txt cargados.\n")
+
+    for(let partitura of partituras){
+        let txt = cargarArchivo("ejs/"+partitura);
+        console.log("\nCargando:\n"+txt);
+        comdasuar.nuevaPartituraAMS(txt);
+    } 
+
+    comdasuar.transportarSeq(100);
+    console.log(" \n transportarSeq "+comdasuar.editSeq().print());
+
+    comdasuar.invertirSeq(7200);
+    console.log(" \n invertirSeq "+comdasuar.editSeq().print());
+
+    comdasuar.retrogradarAlturasSeq();
+    console.log(" \n retrogradarAlturasSeq "+comdasuar.editSeq().print());
+
+    comdasuar.retrogradarDuracionesSeq();
+    console.log(" \n retrogradarDuracionesSeq "+comdasuar.editSeq().print());
+ 
+    //console.log("test get banco secuenca ",comdasuar.getBancoSecuencia( 0 , 14 ).getMidicents() );
+    comdasuar.transmutarAlturasBankSeq(  0 , 14  );
+    console.log(" \n transmutarAlturasSeq "+comdasuar.editSeq().print());
+
+    comdasuar.transmutarDuracionesBankSeq( 0 , 12 );
+    console.log(" \n retrogradarDuracionesSeq "+comdasuar.editSeq().print());
+}
+
 
 function desplegarBanco(){
     ADMIN.bancos[0].print();
@@ -103,4 +136,4 @@ function importarJSON(r){
     ADMIN.compilarJSON();
 }
 
-module.exports = {testParser, cargarArchivo,desplegarBanco,exportarJSON,importarJSON,ADMIN};
+module.exports = {testParser,tester2, cargarArchivo,desplegarBanco,exportarJSON,importarJSON,ADMIN,comdasuar};

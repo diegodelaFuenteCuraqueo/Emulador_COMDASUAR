@@ -26,7 +26,7 @@ class BancoDeSecuencias{
     addSeq(seq){
         this.secuencias.push(seq);
 
-        this.seqActual = this.secuencias.length-1;
+        this.selSeq( this.secuencias.length-1 );
         this.secuencias[this.seqActual].setIndex( this.seqActual );
 
         if(this.secuencias[this.seqActual].getNombre() == undefined || this.secuencias[this.seqActual].getNombre() == ""){ 
@@ -57,6 +57,7 @@ class BancoDeSecuencias{
     selSeq(n){
         if( n <= this.secuencias.length -1 ){
             this.seqActual= n;   
+            console.log(` Secuencia seleccionada : ${this.seqActual} (de ${this.secuencias.length-1})` );
         }else{
             console.error("ERROR : indice incorrecto para la secuencia. "+n+" ( "+typeof n+" )");
         }
@@ -72,7 +73,10 @@ class BancoDeSecuencias{
     }
 
     /** Permite manipular la secuencia seleccionada (con selSec(n)) */
-    editSeq()   { return this.secuencias[this.seqActual] }
+    editSeq()   { 
+        console.log("Editando Secuencia "+this.seqActual);
+        return this.secuencias[this.seqActual]; 
+    }
 
     /** @param {BancoDeSecuencias} b BancoAsuar cargado como objeto JSON (sin métodos). Reemplazará el banco actual. */
     cargarBanco(b){
@@ -110,6 +114,8 @@ class BancoDeSecuencias{
 
     /** @returns {string} Retorna el nombre del Banco */
     getNombre(){        return this.nombre}
+
+    getSecuenciaActualIndex(){ return this.secuenciaActual;}
 
     print(){
         console.log();

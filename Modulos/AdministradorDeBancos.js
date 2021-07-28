@@ -23,14 +23,33 @@ class AdministradorDeBancos{
     /** @param {BancoDeSecuencias} b Banco de secuencias para agregar al final del arreglo */
     addBanco(b){            
         this.bancos.push(b);    
-        this.bancoActual = this.bancos.length-1;
+        this.selBanco( this.bancos.length-1 );
         this.bancos[this.bancoActual].setIndice(this.bancoActual);
+        console.log("Nuevo BancoDeSecuencias insertado : id "+this.bancoActual+" (seleccionado)");
+
+    }
+
+    nuevoBanco(){
+        this.bancos.push(new BancoDeSecuencias());
+        this.selBanco( this.bancos.length-1 );
+        this.bancos[this.bancoActual].setIndice(this.bancoActual);
+        console.log("Nuevo BancoDeSecuencias creado : id "+this.bancoActual+" (seleccionado)");
+    }
+
+    getBancoActualIndex(){
+        return this.bancoActual;
+    }
+
+    getBancoSecuencia(bancoIndex,seqIndex){
+        console.log("Retornando secuencia "+seqIndex+" desde banco "+bancoIndex);
+        return this.bancos[bancoIndex].secuencias[seqIndex];
     }
 
     /** @param {number} n indice del banco a manipular ( 0 a bancos.length ) */
     selBanco(n){    
         if( n <= this.bancos.length -1 ){    
             this.bancoActual = n;   
+            console.log(` Banco seleccionado : ${this.bancoActual} (de ${this.bancos.length-1})` );
         }else{  
             console.error("ERROR : indice incorrecto para el banco. "+n+" ( "+typeof n+" )");}
     }
@@ -45,7 +64,9 @@ class AdministradorDeBancos{
     }
 
     /** Permite manipular el banco seleccionado (con selBanco(n)) */
-    editBanco()    { return this.bancos[this.bancoActual]; }
+    editBanco()    { 
+        console.log("Editando banco "+this.bancoActual);
+        return this.bancos[this.bancoActual]; }
 
     /** Elimina todos los BancosAsuar */
     clear(){
